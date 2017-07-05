@@ -23,6 +23,9 @@ CFLAGS		+= \
 		-nostdinc \
 		-fno-builtin \
 		-fno-stack-protector \
+		-Wall \
+		-Wextra \
+		--std=gnu89 \
 		$(INC)
 SRC_C		:= $(shell find -name *.c)
 DEP		:= $(SRC_C:.c=.d)

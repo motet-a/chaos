@@ -8,6 +8,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 global start:function
+extern kmain
 
 KERNEL_VIRTUAL_BASE equ 0xC0000000
 KERNEL_PAGE_INDEX equ (KERNEL_VIRTUAL_BASE >> 22)
@@ -63,19 +64,10 @@ start:
 	mov eax, cr3
 	mov cr3, eax			; Reload page directory (update TLB)
 
-	; Print "Hello World" on screen
-	mov eax, 0
-	mov ch, 0x0f			; 0x0F => White on black
-
-	.loop0:
-	mov byte cl, [hello_world + eax]
-	mov word [KERNEL_VIRTUAL_BASE + 0xB8000 + eax * 2], cx
-
-	inc eax
-	cmp cl, 0
-	jg start.loop0
+	call kmain
 
 	hlt				; And catch fire
+	jmp $
 
 section .rodata
 hello_world: db "Hello Kernel World", 0
