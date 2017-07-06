@@ -31,13 +31,6 @@
 # define __unused		__attribute__((unused))
 # define __packed		__attribute__((packed))
 
-/* Determine the wordsize from the preprocessor defines.  */
-# if defined __x86_64__ && !defined __ILP32__
-#  define __WORDSIZE		64
-# else
-#  define __WORDSIZE		32
-# endif /* defined __x86_64__ && !defined __ILP32__ */
-
 /****************************************************************************\
 **
 ** Type definition
@@ -49,31 +42,19 @@ typedef unsigned int		uint;
 typedef unsigned short		ushort;
 typedef unsigned char		uchar;
 typedef unsigned long		ulong;
-typedef unsigned long long	ulonglong;
 
 /* Defines some size-dependant types. */
 typedef signed char		int8;
 typedef signed short		int16;
 typedef signed int		int32;
-# if __WORDSIZE == 64
-typedef signed long		int64;
-typedef signed long		intptr;
-# else
-typedef signed long long	int64;
 typedef signed int		intptr;
-# endif /* __WORDSIZE == 64 */
 
 typedef unsigned char		uint8;
 typedef unsigned short		uint16;
 typedef unsigned int		uint32;
-# if __WORDSIZE == 64
-typedef unsigned long		uint64;
-typedef unsigned long		uintptr;
-# else
-typedef unsigned long long	uint64;
 typedef unsigned int		uintptr;
-# endif /* __WORDSIZE == 64 */
 
+/* Boolean type */
 typedef enum
 {
   false				= 0,
@@ -97,4 +78,4 @@ extern void *KERNEL_PHYSICAL_END;
 # define PTR_KERNEL_VIRTUAL_END		((void *)&KERNEL_VIRTUAL_END)
 # define PTR_KERNEL_PHYSICAL_END	((void *)&KERNEL_PHYSICAL_END)
 
-#endif // !_CHAOSDEF_H_
+#endif /* !_CHAOSDEF_H_ */
