@@ -32,7 +32,7 @@ tty_init(void)
 void
 tty_set_color(enum TTY_COLOR fg, enum TTY_COLOR bg)
 {
-  tty.vga_attrib = ((bg << 4u) | (fg & 0x0F));
+	tty.vga_attrib = ((bg << 4u) | (fg & 0x0F));
 }
 
 /*

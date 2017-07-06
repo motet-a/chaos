@@ -37,7 +37,7 @@ start:
 	; Until paging is set up, we should use physical addresses, not virtual ones,
 	; so a conversion (sub KERNEL_VIRTUAL_BASE) is needed.
 
-    	; Set up recursivity mapping
+	; Set up recursivity mapping
 	mov eax, boot_page_directory - KERNEL_VIRTUAL_BASE
 	or eax, 0x3
 	mov dword [boot_page_directory.last_entry - KERNEL_VIRTUAL_BASE], eax
