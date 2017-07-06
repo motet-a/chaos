@@ -12,4 +12,4 @@
 
 # include "chaosdef.h"
 
-#endif // !_CHAOS_H_
+#endif /* !_CHAOS_H_ */

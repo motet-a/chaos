@@ -10,10 +10,10 @@
 #include "drivers/tty.h"
 
 /* Global definitions */
-struct tty tty;
-static uint const	TTY_WIDTH		= 80;
-static uint const	TTY_HEIGHT		= 80;
-static uint16 *const	TTY_BUFFER = PTR_KERNEL_VIRTUAL_BASE + 0xB8000;
+static struct tty tty;
+static uint const	TTY_WIDTH	= 80;
+static uint const	TTY_HEIGHT	= 80;
+static uint16 *const	TTY_BUFFER	= (uint16*)((char *)PTR_KERNEL_VIRTUAL_BASE + 0xB8000);
 
 /*
 ** Initialize the tty driver
@@ -32,7 +32,7 @@ tty_init(void)
 void
 tty_set_color(enum TTY_COLOR fg, enum TTY_COLOR bg)
 {
-	tty.vga_attrib = ((bg << 4u) | (fg & 0x0F));
+	tty.vga_attrib = ((bg << 4u) | (fg & 0x0F)) << 8u;
 }
 
 /*
@@ -45,7 +45,7 @@ tty_clear(void)
 	uint16 blank;
 
 	i = 0;
-	blank = (tty.vga_attrib << 8) | 0x20;
+	blank = tty.vga_attrib | 0x20;
 	while (i < TTY_WIDTH * TTY_HEIGHT)
 	{
 		*(tty.vgabuff + i) = blank;
@@ -67,7 +67,7 @@ tty_putchar(char c)
 		break;
 	default:
 		*(tty.vgabuff + tty.cursor_y * TTY_WIDTH + tty.cursor_x) =
-			((tty.vga_attrib << 8) | c);
+			tty.vga_attrib | (uchar)c;
 		tty.cursor_x += 1;
 		break;
 	}
