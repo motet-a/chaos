@@ -17,7 +17,7 @@
 \****************************************************************************/
 
 /*
-** Define a usefull set of macros that acts like keywords that are not
+** Define a useful set of macros that act like keywords that are not
 ** available in c89.
 */
 # define restrict		__restrict__
