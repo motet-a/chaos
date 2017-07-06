@@ -10,7 +10,7 @@
 # Output
 BUILD		?= build
 ISO		?= chaos.iso
-KERNEL		?= $(BUILD)/boot/chaos
+KERNEL		?= $(BUILD)/chaos.bin
 OBJS		= $(SRC_ASM:.asm=.o) $(SRC_C:.c=.o)
 
 # C compilation
@@ -41,19 +41,16 @@ DEP		:= $(SRC_C:.c=.d)
 
 # Assembly
 NASM		?= nasm
-NASMFLAGS	?= -f elf32
+NASMFLAGS	+= -f elf32
 SRC_ASM		:= $(shell find -name *.asm)
 
 # Link
 LD		?= ld
-LDFLAGS		+= -n --gc-sections -m elf_i386
-LINKERLD	?= linker.ld
+LDFLAGS		+= -n --gc-sections -m elf_i386 -T scripts/kernel.ld
 
 # Tools & utilities
 RM		?= rm -f
 QEMU		?= qemu-system-i386
-GRUB_MKRESCUE	?= grub-mkrescue
-GRUB_FLAGS	?= -d /usr/lib/grub/i386-pc
 
 
 all:		$(KERNEL) $(ISO)
@@ -64,12 +61,10 @@ kernel:		$(KERNEL)
 
 $(KERNEL):	$(OBJS)
 		mkdir -p $(@D) && echo -e "  MKDIR\t $(@D)"
-		$(LD) $(LDFLAGS) -T $(LINKERLD) -o $@ $+ && echo -e "  LD\t $@"
+		$(LD) $(LDFLAGS) -o $@ $+ && echo -e "  LD\t $@"
 
 $(ISO):		$(KERNEL)
-		mkdir -p $(BUILD)/boot/grub && echo -e "  MKDIR\t $(BUILD)/boot/grub"
-		cp grub.cfg $(BUILD)/boot/grub/ && echo -e "  CP\t grub.cfg -> $(BUILD)/boot/grub/grub.cfg"
-		$(GRUB_MKRESCUE) $(GRUB_FLAGS) -o $@ $(BUILD) 2> /dev/null && echo -e "  GRUB\t $@"
+		./scripts/chaos-iso.sh
 
 clean:
 		$(RM) $(OBJS)
