@@ -17,16 +17,18 @@ OBJS		= $(SRC_ASM:.asm=.o) $(SRC_C:.c=.o)
 CC		?= gcc
 INC		?= -Iinclude
 CFLAGS		+= \
-		-m32 \
-		-MMD \
-		-nostdlib \
-		-nostdinc \
-		-fno-builtin \
-		-fno-stack-protector \
-		-Wall \
-		-Wextra \
-		--std=gnu89 \
-		$(INC)
+			-m32 \
+			-MMD \
+			-nostdlib \
+			-nostdinc \
+			-fno-builtin \
+			-fno-stack-protector \
+			-fno-omit-frame-pointer \
+			-Wall \
+			-Wextra \
+			-std=gnu89 \
+			-O2 \
+			$(INC)
 SRC_C		:= $(shell find -name *.c)
 DEP		:= $(SRC_C:.c=.d)
 
