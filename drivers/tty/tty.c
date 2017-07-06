@@ -16,7 +16,7 @@ static uint const	TTY_HEIGHT		= 80;
 static uint16 * const	VGA_BUFFER_VADDRESS	= (uint16 *)0xC00B8000;
 
 /*
-** Initializes the tty driver
+** Initialize the tty driver
 */
 void
 tty_init(void)
@@ -26,12 +26,18 @@ tty_init(void)
 	tty_clear();
 }
 
+/*
+** Set the current color, for future outputs
+*/
 void
 tty_set_color(enum TTY_COLOR fg, enum TTY_COLOR bg)
 {
   tty.vga_attrib = ((bg << 4u) | (fg & 0x0F));
 }
 
+/*
+** Clear the screen
+*/
 void
 tty_clear(void)
 {
@@ -47,6 +53,9 @@ tty_clear(void)
 	}
 }
 
+/*
+** Print a single character on the screen
+*/
 void
 tty_putchar(char c)
 {
@@ -69,6 +78,9 @@ tty_putchar(char c)
 	}
 }
 
+/*
+** Print an array of character on the screen
+*/
 void
 tty_puts(char const *str)
 {
