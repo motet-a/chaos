@@ -81,7 +81,7 @@ boot_page_directory:
 	.kernel_entry:
 	dd 0x00000083			; Kernel resides in high memory
 	times (1024 - KERNEL_PAGE_INDEX - 2) dd 0
-	.last_entry:			; Used for recursivity mapping
+	.last_entry:			; Used for recurse mapping
 	dd 0
 
 ; Boot Kernel stack
