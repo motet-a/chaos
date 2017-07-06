@@ -13,7 +13,7 @@
 struct tty tty;
 static uint const	TTY_WIDTH		= 80;
 static uint const	TTY_HEIGHT		= 80;
-static uint16 * const	VGA_BUFFER_VADDRESS	= (uint16 *)0xC00B8000;
+static uint16 *const	TTY_BUFFER = PTR_KERNEL_VIRTUAL_BASE + 0xB8000;
 
 /*
 ** Initialize the tty driver
@@ -21,7 +21,7 @@ static uint16 * const	VGA_BUFFER_VADDRESS	= (uint16 *)0xC00B8000;
 void
 tty_init(void)
 {
-	tty.vgabuff = VGA_BUFFER_VADDRESS;
+	tty.vgabuff = TTY_BUFFER;
 	tty_set_color(TTY_WHITE, TTY_DARK_GREY);
 	tty_clear();
 }

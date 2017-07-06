@@ -10,6 +10,12 @@
 #ifndef _CHAOSDEF_H_
 # define _CHAOSDEF_H_
 
+/****************************************************************************\
+**
+** Common Macros
+**
+\****************************************************************************/
+
 /*
 ** Define a usefull set of macros that acts like keywords that are not
 ** available in c89.
@@ -31,6 +37,12 @@
 # else
 #  define __WORDSIZE		32
 # endif /* defined __x86_64__ && !defined __ILP32__ */
+
+/****************************************************************************\
+**
+** Type definition
+**
+\****************************************************************************/
 
 /* Defines some shortcuts types. */
 typedef unsigned int		uint;
@@ -67,5 +79,22 @@ typedef enum
   false				= 0,
   true				= 1
 }				bool;
+
+/****************************************************************************\
+**
+** External values
+**
+\****************************************************************************/
+
+/* Defined in linker script */
+extern void *KERNEL_VIRTUAL_LINK;
+extern void *KERNEL_VIRTUAL_BASE;
+extern void *KERNEL_VIRTUAL_END;
+extern void *KERNEL_PHYSICAL_END;
+
+# define PTR_KERNEL_VIRTUAL_LINK	((void *)&KERNEL_VIRTUAL_LINK)
+# define PTR_KERNEL_VIRTUAL_BASE	((void *)&KERNEL_VIRTUAL_BASE)
+# define PTR_KERNEL_VIRTUAL_END		((void *)&KERNEL_VIRTUAL_END)
+# define PTR_KERNEL_PHYSICAL_END	((void *)&KERNEL_PHYSICAL_END)
 
 #endif // !_CHAOSDEF_H_
