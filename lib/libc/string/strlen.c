@@ -7,12 +7,16 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <string.h>
+#include <stddef.h>
 
-#include <drivers/tty.h>
-
-void kmain()
+size_t
+strlen(char const *str)
 {
-	tty_init();
-	tty_puts("Hello Kernel World\n");
+	char const *s;
+
+	s = str;
+	while (*s) {
+		s++;
+	}
+	return ((size_t)(s - str));
 }

@@ -7,12 +7,12 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <string.h>
+#ifndef _STDBOOL_H_
+# define _STDBOOL_H_
 
-#include <drivers/tty.h>
+# define true		1
+# define false		0
 
-void kmain()
-{
-	tty_init();
-	tty_puts("Hello Kernel World\n");
-}
+# define bool		_Bool
+
+#endif /* !_STDBOOL_H_ */

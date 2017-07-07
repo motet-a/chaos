@@ -7,12 +7,15 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <string.h>
+#ifndef _LIBC_STDARG_H_
+# define _LIBC_STDARG_H_
 
-#include <drivers/tty.h>
+# define __NEED_VA_LIST
+# include <bits/types.h>
 
-void kmain()
-{
-	tty_init();
-	tty_puts("Hello Kernel World\n");
-}
+# define va_start(v, l)		__builtin_va_start(v, l)
+# define va_arg(v, l)		__builtin_va_arg(v, l)
+# define va_copy(v, l)		__builtin_va_copy(v, l)
+# define va_end(v, l)		__builtin_va_end(v, l)
+
+#endif /* !_LIBC_STDARG_H_ */

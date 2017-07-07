@@ -15,7 +15,7 @@ OBJS		= $(SRC_ASM:.asm=.o) $(SRC_C:.c=.o)
 
 # C compilation
 CC		?= gcc
-INC		?= -Iinclude
+INC		?= -Iinclude -isystem include/lib/libc
 CFLAGS		+= \
 			-m32 \
 			-MMD \

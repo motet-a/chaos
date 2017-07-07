@@ -7,7 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include "drivers/tty.h"
+#include <drivers/tty.h>
 
 /* Global definitions */
 static struct tty tty;

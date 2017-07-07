@@ -7,12 +7,16 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <string.h>
+#ifndef _STDDEF_H_
+# define _STDDEF_H_
 
-#include <drivers/tty.h>
+# define NULL			((void *)0u)
 
-void kmain()
-{
-	tty_init();
-	tty_puts("Hello Kernel World\n");
-}
+# define __NEED_SIZE_T
+# define __NEED_PTRDIFF_T
+
+# include <bits/types.h>
+
+# define offsetof(t, m)		__builtin_offsetof(t, m)
+
+#endif /* !_STDDEF_H_ */

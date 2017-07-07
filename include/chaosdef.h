@@ -10,6 +10,10 @@
 #ifndef _CHAOSDEF_H_
 # define _CHAOSDEF_H_
 
+# include <stddef.h>
+# include <stdbool.h>
+# include <stdarg.h>
+
 /*
 ** Define a useful set of macros that act like keywords that are not
 ** available in c11.
@@ -38,13 +42,6 @@ typedef unsigned char		uint8;
 typedef unsigned short		uint16;
 typedef unsigned int		uint32;
 typedef unsigned int		uintptr;
-
-/* Boolean type */
-typedef enum
-{
-  false				= 0,
-  true				= 1
-}				bool;
 
 /* Defined in linker script */
 extern void *KERNEL_VIRTUAL_LINK;

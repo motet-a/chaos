@@ -7,12 +7,11 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <string.h>
+#ifndef _LIBC_STRING_H_
+# define _LIBC_STRING_H_
 
-#include <drivers/tty.h>
+# include <chaosdef.h>
 
-void kmain()
-{
-	tty_init();
-	tty_puts("Hello Kernel World\n");
-}
+size_t		strlen(char const *) __pure;
+
+#endif /* !_LIBC_STRING_H_ */
