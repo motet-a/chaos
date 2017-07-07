@@ -32,7 +32,7 @@ CFLAGS		+= \
 			-fno-omit-frame-pointer \
 			-Wall \
 			-Wextra \
-			-std=gnu89 \
+			-std=gnu11 \
 			-pedantic \
 			-O2 \
 			$(INC)

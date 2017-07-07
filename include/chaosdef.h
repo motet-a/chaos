@@ -10,19 +10,10 @@
 #ifndef _CHAOSDEF_H_
 # define _CHAOSDEF_H_
 
-/****************************************************************************\
-**
-** Common Macros
-**
-\****************************************************************************/
-
 /*
 ** Define a useful set of macros that act like keywords that are not
-** available in c89.
+** available in c11.
 */
-# define restrict		__restrict__
-# define asm			__asm__
-# define inline			__inline__
 # define __pure			__attribute__((pure))
 # define __const		__attribute__((const))
 # define __cold			__attribute__((cold))
@@ -30,12 +21,6 @@
 # define __used			__attribute__((used))
 # define __unused		__attribute__((unused))
 # define __packed		__attribute__((packed))
-
-/****************************************************************************\
-**
-** Type definition
-**
-\****************************************************************************/
 
 /* Defines some shortcuts types. */
 typedef unsigned int		uint;
@@ -60,12 +45,6 @@ typedef enum
   false				= 0,
   true				= 1
 }				bool;
-
-/****************************************************************************\
-**
-** External values
-**
-\****************************************************************************/
 
 /* Defined in linker script */
 extern void *KERNEL_VIRTUAL_LINK;
