@@ -16,5 +16,4 @@ kmain()
 	tty_init();
 	tty_puts("Hello Kernel World\n");
 	kernel_init_level(CHAOS_INIT_LEVEL_EARLIEST, CHAOS_INIT_LEVEL_LATEST);
-	tty_puts("Init level finished");
 }

@@ -7,7 +7,6 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <kernel/linker.h>
 #include <kernel/init.h>
 
 extern struct init_hook const __start_chaos_init[] __weak;
