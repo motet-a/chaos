@@ -64,6 +64,7 @@ $(KERNEL):	$(OBJS)
 		$(LD) $(LDFLAGS) -o $@ $+ && echo -e "  LD\t $@"
 
 $(ISO):		$(KERNEL)
+		echo -e "  SHELL\t chaos-iso.sh"
 		./scripts/chaos-iso.sh
 
 clean:
@@ -76,12 +77,15 @@ clean:
 re:		clean all
 
 run:		$(ISO)
+		echo -e "  SHELL\t qemu-x86.sh"
 		./scripts/qemu-x86.sh -m 1G
 
 monitor:	all
+		echo -e "  SHELL\t qemu-x86.sh"
 		./scripts/qemu-x86.sh -t -m 1G
 
 debug:		all
+		echo -e "  SHELL\t qemu-x86.sh"
 		./scripts/qemu-x86.sh -d -m 1G
 
 %.o:		%.asm
