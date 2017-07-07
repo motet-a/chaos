@@ -23,8 +23,8 @@ if [ ! -f "$BUILD_DIR/chaos.bin" ]; then
 fi
 
 if ! which xorriso grub-mkrescue &> /dev/null; then
-  echo -e "  ERROR\t You must install xorriso and grub-mkrescue first"
-  exit 1
+	echo -e "  ERROR\t You must install xorriso and grub-mkrescue first"
+	exit 1
 fi
 
 TEMP=$(mktemp -d)

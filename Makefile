@@ -76,16 +76,13 @@ clean:
 re:		clean all
 
 run:		$(ISO)
-		echo -e "  QEMU\t $(ISO)"
-		$(QEMU) -serial stdio -cdrom $(ISO) -m 1G
+		./scripts/qemu-x86.sh -m 1G
 
 monitor:	all
-		echo -e "  QEMU\t $(ISO)"
-		$(QEMU) -monitor stdio -cdrom $(ISO) -m 1G
+		./scripts/qemu-x86.sh -t -m 1G
 
 debug:		all
-		echo -e "  QEMU\t $(ISO)"
-		$(QEMU) -s -d int,cpu_reset -no-reboot -serial stdio -cdrom $(ISO) -m 1G
+		./scripts/qemu-x86.sh -d -m 1G
 
 %.o:		%.asm
 		$(NASM) $(NASMFLAGS) $< -o $@ && echo -e "  NASM\t $<"
