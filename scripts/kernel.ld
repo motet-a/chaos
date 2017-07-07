@@ -7,35 +7,36 @@
 **
 \* ------------------------------------------------------------------------ */
 
-KERNEL_VIRTUAL_LINK = 0xC0100000;
-KERNEL_VIRTUAL_BASE = 0xC0000000;
+__KERNEL_VIRTUAL_LINK = 0xC0100000;
+__KERNEL_VIRTUAL_BASE = 0xC0000000;
 
 OUTPUT_FORMAT(elf32-i386);
 ENTRY(start)
 
 SECTIONS
 {
-  . = KERNEL_VIRTUAL_LINK;
+	. = __KERNEL_VIRTUAL_LINK;
 
-  .text ALIGN(0x1000) : AT(ADDR(.text) - KERNEL_VIRTUAL_BASE)
-  {
-    *(.text)
-  }
+	.text ALIGN(0x1000) : AT(ADDR(.text) - __KERNEL_VIRTUAL_BASE)
+	{
+		*(.text)
+	}
 
-  .rodata ALIGN(0x1000) : AT(ADDR(.rodata) - KERNEL_VIRTUAL_BASE)
-  {
-    *(.rodata)
-  }
+	.rodata ALIGN(0x1000) : AT(ADDR(.rodata) - __KERNEL_VIRTUAL_BASE)
+	{
+		*(.rodata)
+	}
 
-  .data ALIGN(0x1000) : AT(ADDR(.data) - KERNEL_VIRTUAL_BASE)
-  {
-    *(.data)
-  }
+	.data ALIGN(0x1000) : AT(ADDR(.data) - __KERNEL_VIRTUAL_BASE)
+	{
+		*(.data)
+	}
 
-  .bss ALIGN(0x1000) : AT(ADDR(.bss) - KERNEL_VIRTUAL_BASE) {
-    *(COMMON)
-    *(.bss)
-  }
-  KERNEL_VIRTUAL_END = .;
-  KERNEL_PHYSICAL_END = . - KERNEL_VIRTUAL_BASE;
+	.bss ALIGN(0x1000) : AT(ADDR(.bss) - __KERNEL_VIRTUAL_BASE) {
+		*(COMMON)
+		*(.bss)
+	}
+
+	__KERNEL_VIRTUAL_END = .;
+	__KERNEL_PHYSICAL_END = . - __KERNEL_VIRTUAL_BASE;
 }

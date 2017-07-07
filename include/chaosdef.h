@@ -28,6 +28,9 @@
 # define __used			__attribute__((used))
 # define __unused		__attribute__((unused))
 # define __packed		__attribute__((packed))
+# define __weak			__attribute__((weak))
+# define __aligned(x)		__attribute__((aligned (x)))
+# define __section(s)		__attribute__((section (s)))
 
 /* Defines some shortcuts types. */
 typedef unsigned int		uint;
@@ -45,16 +48,5 @@ typedef unsigned char		uint8;
 typedef unsigned short		uint16;
 typedef unsigned int		uint32;
 typedef unsigned int		uintptr;
-
-/* Defined in linker script */
-extern void *KERNEL_VIRTUAL_LINK;
-extern void *KERNEL_VIRTUAL_BASE;
-extern void *KERNEL_VIRTUAL_END;
-extern void *KERNEL_PHYSICAL_END;
-
-# define PTR_KERNEL_VIRTUAL_LINK	((void *)&KERNEL_VIRTUAL_LINK)
-# define PTR_KERNEL_VIRTUAL_BASE	((void *)&KERNEL_VIRTUAL_BASE)
-# define PTR_KERNEL_VIRTUAL_END		((void *)&KERNEL_VIRTUAL_END)
-# define PTR_KERNEL_PHYSICAL_END	((void *)&KERNEL_PHYSICAL_END)
 
 #endif /* !_CHAOSDEF_H_ */

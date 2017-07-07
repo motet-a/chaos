@@ -7,13 +7,14 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <kernel/linker.h>
 #include <drivers/tty.h>
 
 /* Global definitions */
 static struct tty tty;
 static uint const	TTY_WIDTH	= 80;
 static uint const	TTY_HEIGHT	= 80;
-static uint16 *const	TTY_BUFFER	= (uint16*)((char *)PTR_KERNEL_VIRTUAL_BASE + 0xB8000);
+static uint16 *const	TTY_BUFFER	= (uint16*)((char *)KERNEL_VIRTUAL_BASE + 0xB8000);
 
 /*
 ** Initialize the tty driver

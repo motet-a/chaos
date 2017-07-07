@@ -7,14 +7,10 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <kernel/init.h>
-#include <drivers/tty.h>
+#ifndef __LIBC_BITS_LIMITS_H_
+# define __LIBC_BITS_LIMITS_H_
 
-void
-kmain()
-{
-	tty_init();
-	tty_puts("Hello Kernel World\n");
-	kernel_init_level(CHAOS_INIT_LEVEL_EARLIEST, CHAOS_INIT_LEVEL_LATEST);
-	tty_puts("Init level finished");
-}
+# define LONG_MAX	(0x7fffffffL)
+# define LLONG_MAX	(0x7fffffffffffffffLL)
+
+#endif /* !__LIBC_BITS_LIMITS_H_ */
