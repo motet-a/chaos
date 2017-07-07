@@ -21,10 +21,9 @@ find_next_hook(struct init_hook const *last, enum init_level last_level, enum in
 
 	found = NULL;
 	seen_last = false;
-	for (hook = __start_chaos_init; hook < __stop_chaos_init; hook++)
+	for (hook = __start_chaos_init; hook < __stop_chaos_init; ++hook)
 	{
-		if (hook == last)
-			seen_last = true;
+		seen_last |= (hook == last);
 
 		if (hook->level < last_level
 		    || hook->level > end_level
@@ -51,7 +50,7 @@ kernel_init_level(enum init_level start_level, enum init_level end_level)
 
 	hook = find_next_hook(NULL, start_level - 1, end_level);
 	while (hook != NULL) {
-		hook->hook();
+		hook->hook(hook->level);
 		hook = find_next_hook(hook, hook->level, end_level);
 	}
 }

@@ -17,12 +17,15 @@ enum	init_level
 {
 	CHAOS_INIT_LEVEL_EARLIEST	= 0x00001,
 
-	CHAOS_INIT_LEVEL_ARCH_EARLY	= 0X10000,
+	CHAOS_INIT_LEVEL_ARCH_EARLY	= 0x10000,
+	CHAOS_INIT_LEVEL_DRIVER_EARLY	= 0x20000,
+	CHAOS_INIT_LEVEL_ARCH		= 0x30000,
+	CHAOS_INIT_LEVEL_DRIVER		= 0x40000,
 
 	CHAOS_INIT_LEVEL_LATEST		= UINT_MAX
 };
 
-typedef void(*init_hook_funcptr)(void);
+typedef void(*init_hook_funcptr)(enum init_level);
 
 struct	init_hook
 {
@@ -31,8 +34,6 @@ struct	init_hook
 	char const *name;
 };
 
-void	kernel_init_level(enum init_level, enum init_level);
-
 # define NEW_INIT_HOOK(n, h, l)						\
 	__aligned(sizeof(void*)) __used __section("chaos_init")		\
 	static const struct init_hook _init_hook_struct_##n = {		\
@@ -40,5 +41,7 @@ void	kernel_init_level(enum init_level, enum init_level);
 		.hook = h,						\
 		.name = #n,						\
 	}
+
+void	kernel_init_level(enum init_level, enum init_level);
 
 #endif /* !_INIT_H_ */

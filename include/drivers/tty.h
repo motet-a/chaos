@@ -40,7 +40,6 @@ struct			tty
 	uint		cursor_y;
 };
 
-void			tty_init(void);
 void			tty_set_color(enum TTY_COLOR, enum TTY_COLOR);
 void			tty_clear(void);
 void			tty_putchar(char);

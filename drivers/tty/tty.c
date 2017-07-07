@@ -8,6 +8,7 @@
 \* ------------------------------------------------------------------------ */
 
 #include <kernel/linker.h>
+#include <drivers/drivers.h>
 #include <drivers/tty.h>
 
 /* Global definitions */
@@ -20,7 +21,7 @@ static uint16 *const	TTY_BUFFER	= (uint16*)((char *)KERNEL_VIRTUAL_BASE + 0xB800
 ** Initialize the tty driver
 */
 void
-tty_init(void)
+tty_init(enum init_level il __unused)
 {
 	tty.vgabuff = TTY_BUFFER;
 	tty_set_color(TTY_WHITE, TTY_DARK_GREY);
@@ -90,3 +91,5 @@ tty_puts(char const *str)
 		++str;
 	}
 }
+
+NEW_DRIVER_HOOK(tty_init, &tty_init, CHAOS_INIT_LEVEL_DRIVER_EARLY);
