@@ -18,6 +18,9 @@
 ** Define a useful set of macros that act like keywords that are not
 ** available in c11.
 */
+# define inline			__inline
+# define asm			__asm__
+# define restrict		__restrict
 # define __pure			__attribute__((pure))
 # define __const		__attribute__((const))
 # define __cold			__attribute__((cold))

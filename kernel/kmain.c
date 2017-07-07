@@ -11,7 +11,8 @@
 
 #include <drivers/tty.h>
 
-void kmain()
+void
+kmain()
 {
 	tty_init();
 	tty_puts("Hello Kernel World\n");
