@@ -8,7 +8,7 @@
 \* ------------------------------------------------------------------------ */
 
 #include <kernel/linker.h>
-#include <drivers/drivers.h>
+#include <kernel/drivers.h>
 #include <drivers/tty.h>
 
 /* Global definitions */
