@@ -13,7 +13,7 @@
 # include <chaosdef.h>
 
 /*
-** We'll be completed when needed.
+** Will be completed when needed.
 */
 
 size_t		strlen(char const *) __pure;
