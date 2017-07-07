@@ -22,7 +22,7 @@ enum	init_level
 	CHAOS_INIT_LEVEL_ARCH		= 0x30000,
 	CHAOS_INIT_LEVEL_DRIVER		= 0x40000,
 
-	CHAOS_INIT_LEVEL_LATEST		= UINT_MAX
+	CHAOS_INIT_LEVEL_LATEST		= INT_MAX
 };
 
 typedef void(*init_hook_funcptr)(enum init_level);
