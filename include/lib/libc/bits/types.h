@@ -16,13 +16,13 @@ typedef __SIZE_TYPE__		size_t;
 # endif /* !__NEED_SIZE_T */
 
 # if defined(__NEED_PTRDIFF_T) && !defined(__DEFINED_PTRDIFF_T)
-typedef __NEED_PTRDIFF_T	size_t;
+typedef __PTRDIFF_TYPE__	ptrdiff_t;
 #  define __DEFINED_PTRDIFF_T
 # endif /* !__NEED_PTRDIFF_T */
 
 # if defined(__NEED_VA_LIST) && !defined(__DEFINED_VA_LIST)
 typedef __builtin_va_list	va_list;
 #  define __DEFINED_VA_LIST
-# endif /* !__NEED_PTRDIFF_T */
+# endif /* !__NEED_VA_LIST */
 
 #endif /* !_LIBC_BITS_TYPES_H_ */
