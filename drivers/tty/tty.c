@@ -15,7 +15,7 @@
 /* Global definitions */
 static struct tty tty;
 static uint const	TTY_WIDTH	= 80;
-static uint const	TTY_HEIGHT	= 80;
+static uint const	TTY_HEIGHT	= 25;
 static uint16 *const	TTY_BUFFER	= (uint16*)((char *)KERNEL_VIRTUAL_BASE + 0xB8000);
 
 /*
@@ -66,6 +66,7 @@ tty_putchar(int c)
 	tty.cursor_y += (tty.cursor_x >= TTY_WIDTH);
 	tty.cursor_x *= (tty.cursor_x < TTY_WIDTH);
 	while (tty.cursor_y >= TTY_HEIGHT) {
+		/* TODO add scroll here */
 		tty.cursor_y -= 1;
 	}
 }
