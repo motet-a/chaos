@@ -11,7 +11,7 @@
 #include <lib/io.h>
 
 static void
-default_putc(char c __unused)
+default_putc(int c __unused)
 {}
 
 static void
@@ -39,7 +39,7 @@ static struct io_input_callbacks	input_cb = {
 };
 
 void
-io_putc(char c)
+io_putc(int c)
 {
 	serial_cb.putc(c);
 	console_cb.putc(c);
@@ -66,6 +66,7 @@ register_io_output_callbacks(struct io_output_callbacks *cb, enum io_output_type
 	} else {
 		console_cb = *cb;
 	}
+	io_puts("Registered a new output callback\n");
 }
 
 void
