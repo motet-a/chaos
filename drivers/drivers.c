@@ -7,7 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <kernel/drivers.h>
+#include <drivers/drivers.h>
 
 extern struct driver_hook const __start_driver_hooks[] __weak;
 extern struct driver_hook const __stop_driver_hooks[] __weak;
