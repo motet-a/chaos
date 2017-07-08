@@ -66,7 +66,6 @@ register_io_output_callbacks(struct io_output_callbacks *cb, enum io_output_type
 	} else {
 		console_cb = *cb;
 	}
-	io_puts("Registered a new output callback\n");
 }
 
 void

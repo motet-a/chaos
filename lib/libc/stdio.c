@@ -7,13 +7,19 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <kernel/init.h>
-#include <drivers/tty.h>
 #include <stdio.h>
+#include <lib/io.h>
 
-void
-kmain()
+int
+puts(char const *str)
 {
-	kernel_init_level(CHAOS_INIT_LEVEL_EARLIEST, CHAOS_INIT_LEVEL_LATEST);
-	puts("Init finished\n");
+	io_puts(str);
+	return (1);
+}
+
+int
+putc(int c)
+{
+	io_putc(c);
+	return ((int)(unsigned char)c);
 }

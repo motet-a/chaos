@@ -10,23 +10,13 @@
 #include <kernel/linker.h>
 #include <drivers/drivers.h>
 #include <drivers/tty.h>
+#include <lib/io.h>
 
 /* Global definitions */
 static struct tty tty;
 static uint const	TTY_WIDTH	= 80;
 static uint const	TTY_HEIGHT	= 80;
 static uint16 *const	TTY_BUFFER	= (uint16*)((char *)KERNEL_VIRTUAL_BASE + 0xB8000);
-
-/*
-** Initialize the tty driver
-*/
-void
-tty_init(enum init_level il __unused)
-{
-	tty.vgabuff = TTY_BUFFER;
-	tty_set_color(TTY_WHITE, TTY_DARK_GREY);
-	tty_clear();
-}
 
 /*
 ** Set the current color, for future outputs
@@ -58,8 +48,8 @@ tty_clear(void)
 /*
 ** Print a single character on the screen
 */
-void
-tty_putchar(char c)
+static void
+tty_putchar(int c)
 {
 	switch (c)
 	{
@@ -83,13 +73,29 @@ tty_putchar(char c)
 /*
 ** Print an array of character on the screen
 */
-void
+static void
 tty_puts(char const *str)
 {
 	while (*str) {
 		tty_putchar(*str);
 		++str;
 	}
+}
+
+/*
+** Initialize the tty driver
+*/
+static void
+tty_init(enum init_level il __unused)
+{
+	struct io_output_callbacks cb;
+
+	cb.putc = tty_putchar;
+	cb.puts = tty_puts;
+	tty.vgabuff = TTY_BUFFER;
+	tty_set_color(TTY_WHITE, TTY_DARK_GREY);
+	tty_clear();
+	register_io_output_callbacks(&cb, IO_OUTPUT_CONSOLE);
 }
 
 NEW_DRIVER_HOOK(tty_init, &tty_init, CHAOS_INIT_LEVEL_DRIVER_EARLY);

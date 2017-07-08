@@ -7,13 +7,12 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <kernel/init.h>
-#include <drivers/tty.h>
-#include <stdio.h>
+#ifndef _LIBC_STDIO_H_
+# define _LIBC_STDIO_H_
 
-void
-kmain()
-{
-	kernel_init_level(CHAOS_INIT_LEVEL_EARLIEST, CHAOS_INIT_LEVEL_LATEST);
-	puts("Init finished\n");
-}
+# include <chaosdef.h>
+
+int		puts(char const *str);
+int		putchar(int c);
+
+#endif /* !_LIBC_STDIO_H_ */

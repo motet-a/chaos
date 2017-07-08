@@ -42,7 +42,5 @@ struct			tty
 
 void			tty_set_color(enum TTY_COLOR, enum TTY_COLOR);
 void			tty_clear(void);
-void			tty_putchar(char);
-void			tty_puts(char const *);
 
 #endif /* !_TTY_H_ */
