@@ -100,8 +100,8 @@ long_to_readable(char *buff, size_t buffsize, ulong nb, uint base, uint flags, c
 ** This printf engine is far from perfect, but it has been done quickly
 ** so that we can move forward and easily debug.
 ** It does not support floating point, but it adds some custom options:
-**	- %b (boolen)
-**	- %t (base 2)
+**	- %y (boolen)
+**	- %b (base 2)
 **	- %r (human readable storage-size)
 */
 int
