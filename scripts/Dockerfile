@@ -1,7 +1,16 @@
+##############################################################################
+##
+##  This file is part of the Chaos Kernel, and is made available under
+##  the terms of the GNU General Public License version 2.
+##
+##  Copyright (C) 2017 - Antoine Motet
+##
+##############################################################################
+
 FROM buildpack-deps:stretch
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends qemu grub-pc-bin xorriso \
+    && apt-get install -y --no-install-recommends qemu grub-pc-bin xorriso nasm \
     && mkdir /chaos
 
 WORKDIR /chaos

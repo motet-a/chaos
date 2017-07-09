@@ -1,9 +1,22 @@
 #!/bin/sh -e
 
-cd "$(dirname "$0")"
-cd ..
+##############################################################################
+##
+##  This file is part of the Chaos Kernel, and is made available under
+##  the terms of the GNU General Public License version 2.
+##
+##  Copyright (C) 2017 - Antoine Motet
+##
+##############################################################################
 
-docker build -t chaos -f scripts/Dockerfile .
+set -e -u
+
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+PROJECT_DIR="$SCRIPT_DIR/../"
+
+cd "$PROJECT_DIR"
+
+docker build -t chaos -f ./scripts/Dockerfile .
 
 docker run --rm --name chaos -d chaos \
 	qemu-system-i386 \
