@@ -15,6 +15,11 @@
 static char const digits_min[16] = "0123456789abcdef";
 static char const digits_maj[16] = "0123456789ABCDEF";
 
+/*
+** Returns a pointer to the beginning of the number written in `buff`.
+** The characters of `buff` before the returned pointer are not accessed
+** by this function. `buff[0]` may be undefined.
+*/
 static char *
 long_to_string(char *buff, size_t pos, ulong nb, uint base, uint flags, char *sign)
 {
@@ -71,6 +76,9 @@ static char const* const units[] =
   NULL
 };
 
+/*
+** As weird as long_to_string().
+*/
 static char *
 long_to_readable(char *buff, size_t buffsize, ulong nb, uint base, uint flags, char *sign)
 {
