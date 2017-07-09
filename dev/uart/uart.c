@@ -13,19 +13,24 @@
 
 # define COM1			0x3F8 /* COM1 Port */
 
-static void
+static int
 uart_putc(int c)
 {
 	outb(COM1, c);
+	return (1);
 }
 
-static void
+static int
 uart_puts(char const *str)
 {
+	char const *s;
+
+	s = str;
 	while (*str) {
 		outb(COM1, *str);
 		++str;
 	}
+	return (str - s);
 }
 
 static void

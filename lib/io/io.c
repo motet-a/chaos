@@ -10,18 +10,22 @@
 #include <chaosdef.h>
 #include <lib/io.h>
 
-static void
+static int
 default_putc(int c __unused)
-{}
+{
+	return (-1);
+}
 
-static void
+static int
 default_puts(char const *str __unused)
-{}
+{
+	return (-1);
+}
 
 static char
 default_getc(void)
 {
-  return (0);
+	return (-1);
 }
 
 static struct io_output_callbacks	serial_cb = {
@@ -38,18 +42,18 @@ static struct io_input_callbacks	input_cb = {
 	.getc = &default_getc,
 };
 
-void
+int
 io_putc(int c)
 {
 	serial_cb.putc(c);
-	console_cb.putc(c);
+	return (console_cb.putc(c));
 }
 
-void
+int
 io_puts(char const *s)
 {
 	serial_cb.puts(s);
-	console_cb.puts(s);
+	return (console_cb.puts(s));
 }
 
 char

@@ -48,7 +48,7 @@ tty_clear(void)
 /*
 ** Print a single character on the screen
 */
-static void
+static int
 tty_putchar(int c)
 {
 	switch (c)
@@ -69,18 +69,23 @@ tty_putchar(int c)
 		/* TODO add scroll here */
 		tty.cursor_y -= 1;
 	}
+	return (1);
 }
 
 /*
 ** Print an array of character on the screen
 */
-static void
+static int
 tty_puts(char const *str)
 {
+	char const *s;
+
+	s = str;
 	while (*str) {
 		tty_putchar(*str);
 		++str;
 	}
+	return (str - s);
 }
 
 /*

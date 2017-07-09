@@ -11,8 +11,8 @@
 # define _IO_H_
 
 typedef char	(*io_getc_cb)(void);
-typedef void	(*io_putc_cb)(int);
-typedef void	(*io_puts_cb)(char const *);
+typedef int	(*io_putc_cb)(int);
+typedef int	(*io_puts_cb)(char const *);
 
 struct		io_output_callbacks
 {
@@ -31,8 +31,8 @@ enum		io_output_types
 	IO_OUTPUT_CONSOLE,
 };
 
-void	io_putc(int c);
-void	io_puts(char const *str);
+int	io_putc(int c);
+int	io_puts(char const *str);
 char	io_getc(void);
 
 void	register_io_output_callbacks(struct io_output_callbacks *, enum io_output_types);

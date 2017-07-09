@@ -12,7 +12,29 @@
 
 # include <chaosdef.h>
 
+struct vsnprintf_output_args
+{
+	char *str;
+	size_t len;
+	size_t pos;
+};
+
+struct printf_output_args
+{
+	int ret;
+};
+
 int		puts(char const *str);
 int		putchar(int c);
+
+/* printf-like functions */
+int		printf(char const *fmt, ...);
+int		sprintf(char *str, char const *fmt, ...);
+int		snprintf(char *str, size_t size, char const *fmt, ...);
+
+/* vprintf-like functions */
+int		vprintf(char const *fmt, va_list va);
+int		vsprintf(char *str, char const *fmt, va_list va);
+int		vsnprintf(char *str, size_t size, char const *fmt, va_list va);
 
 #endif /* !_LIBC_STDIO_H_ */

@@ -33,7 +33,6 @@ CFLAGS		+= \
 			-Wall \
 			-Wextra \
 			-std=gnu11 \
-			-pedantic \
 			-O2 \
 			$(INC)
 SRC_C		:= $(shell find -name *.c)

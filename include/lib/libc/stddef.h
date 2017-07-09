@@ -11,6 +11,7 @@
 # define _STDDEF_H_
 
 # define NULL			((void *)0u)
+# define PAGE_SIZE		(4096u)
 
 # define __NEED_SIZE_T
 # define __NEED_PTRDIFF_T
