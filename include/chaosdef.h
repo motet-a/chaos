@@ -7,8 +7,8 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _CHAOSDEF_H_
-# define _CHAOSDEF_H_
+#ifndef _CHAOS_DEF_H_
+# define _CHAOS_DEF_H_
 
 # include <stddef.h>
 # include <stdbool.h>
@@ -31,6 +31,9 @@
 # define __weak			__attribute__((weak))
 # define __aligned(x)		__attribute__((aligned (x)))
 # define __section(s)		__attribute__((section (s)))
+# define __noreturn		__attribute__((noreturn))
+
+# include <debug.h>
 
 /* Defines some shortcuts types. */
 typedef unsigned int		uint;
@@ -49,4 +52,4 @@ typedef unsigned short		uint16;
 typedef unsigned int		uint32;
 typedef unsigned int		uintptr;
 
-#endif /* !_CHAOSDEF_H_ */
+#endif /* !_CHAOS_DEF_H_ */
