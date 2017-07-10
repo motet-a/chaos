@@ -12,6 +12,11 @@
 
 # include <chaosdef.h>
 
+struct table_desc_ptr {
+	uint16 limit;
+	uintptr base;
+} __packed;
+
 static inline void
 outb(ushort port, uchar data)
 {
