@@ -25,7 +25,7 @@ struct		gdt_entry
 } __packed;
 
 /*
-** The GDT_ENTRY() macro generats a valid gdt entry depending on the
+** The GDT_ENTRY() macro generates a gdt entry depending on the
 ** flags given as parameter.
 */
 # define	GDT_ENTRY(fl, base, limit)			\
@@ -39,9 +39,6 @@ struct		gdt_entry
 		.base_high =   ((base) & 0xFF000000UL) >> 24u	\
 	}							\
 
-/*
-**
-*/
 enum		gdt_entries
 {
 	GDT_NULL_ENTRY		= 0,
