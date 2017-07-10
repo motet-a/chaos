@@ -8,7 +8,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 global start:function
-extern kmain
+extern main
 
 KERNEL_VIRTUAL_BASE equ 0xC0000000
 KERNEL_PAGE_INDEX equ (KERNEL_VIRTUAL_BASE >> 22)
@@ -64,7 +64,7 @@ start:
 	mov eax, cr3
 	mov cr3, eax			; Reload page directory (update TLB)
 
-	call kmain
+	call main
 
 	hlt				; And catch fire
 	jmp $
