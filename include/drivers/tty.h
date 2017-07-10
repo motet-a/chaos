@@ -10,7 +10,7 @@
 #ifndef _TTY_H_
 # define _TTY_H_
 
-# include "chaosdef.h"
+# include <chaosdef.h>
 
 enum			TTY_COLOR
 {
