@@ -10,7 +10,7 @@
 FROM buildpack-deps:stretch
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends qemu grub-pc-bin xorriso nasm \
+    && apt-get install -y --no-install-recommends qemu grub-pc-bin xorriso nasm clang \
     && mkdir /chaos
 
 WORKDIR /chaos
@@ -22,4 +22,7 @@ COPY lib /chaos/lib
 COPY scripts /chaos/scripts
 COPY Makefile /chaos/Makefile
 
+RUN make clean
+RUN CC=clang make kernel
+RUN make clean
 RUN make iso
