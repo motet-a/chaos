@@ -7,7 +7,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Constant that are defined in the linker script
+; Also defined in the linker script
 %define KERNEL_VIRTUAL_BASE	(0xC0000000)
 
 ; The index of the page table containing KERNEL_VIRTUAL_BASE

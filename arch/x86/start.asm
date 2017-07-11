@@ -17,7 +17,7 @@ extern main
 section .text
 bits 32
 start:
-	; TODO - verify that we have been booteed via a multiboot compliant boot loader
+	; TODO - verify that we have been booted via a multiboot-compliant boot loader
 
 	; Until paging is set up, we should use physical addresses, not virtual ones,
 	; A conversion ( PHYS(addr) ) is needed.
