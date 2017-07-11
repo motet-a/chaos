@@ -12,8 +12,8 @@
 #include <string.h>
 #include <stdbool.h>
 
-static char const digits_min[16] = "0123456789abcdef";
-static char const digits_maj[16] = "0123456789ABCDEF";
+static char const digits_low[16] = "0123456789abcdef";
+static char const digits_upp[16] = "0123456789ABCDEF";
 
 /*
 ** Returns a pointer to the beginning of the number written in `buff`.
@@ -28,7 +28,7 @@ long_to_string(char *buff, size_t pos, ulong nb, uint base, uint flags, char *si
 	char const *digits;
 
 	neg = false;
-	digits = (flags & PRINTF_CAPS) ? digits_maj : digits_min;
+	digits = (flags & PRINTF_CAPS) ? digits_upp : digits_low;
 	if ((flags & PRINTF_SIGNED_INT) && (long)nb < 0) {
 		neg = true;
 		nb *= -1; /* Fuck you LONG_MIN ! */
