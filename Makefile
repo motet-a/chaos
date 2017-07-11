@@ -49,9 +49,6 @@ SRC_ASM		:= $(shell find "arch/$(ARCH)/" drivers kernel lib -name *.asm)
 LD		?= ld
 LDFLAGS		+= -n --gc-sections -m elf_i386 -T arch/$(ARCH)/kernel.ld
 
-# Tools & utilities
-RM		?= rm -f
-
 
 all:		$(KERNEL) $(ISO)
 
