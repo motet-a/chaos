@@ -31,9 +31,12 @@ sleep 2
 logs=$(docker logs chaos)
 docker stop chaos
 
-echo $logs
+echo "$logs" > /tmp/logs
 
-case "$logs" in
-	*"Init finished"*) exit;;
-	*) exit 1;;
-esac
+echo "===== LOGS ====="
+cat /tmp/logs
+echo "================"
+
+grep "Welcome to ChaOS" /tmp/logs &> /dev/null
+
+echo "Test passed"

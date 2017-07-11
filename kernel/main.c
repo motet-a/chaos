@@ -15,6 +15,6 @@ int
 main()
 {
 	kernel_init_level(CHAOS_INIT_LEVEL_EARLIEST, CHAOS_INIT_LEVEL_LATEST);
-	printf("Init finished\n");
+	printf("Welcome to ChaOS\n");
 	return (0);
 }
