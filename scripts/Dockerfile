@@ -14,7 +14,7 @@ RUN apt-get update \
     && mkdir /chaos
 
 WORKDIR /chaos
-COPY dev /chaos/dev
+COPY arch /chaos/arch
 COPY drivers /chaos/drivers
 COPY include /chaos/include
 COPY kernel /chaos/kernel
