@@ -7,29 +7,10 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _ASM_H_
-# define _ASM_H_
+#ifndef _UART_H_
+# define _UART_H_
 
 # include <chaosdef.h>
+# include <kernel/devices.h>
 
-struct table_desc_ptr {
-	uint16 limit;
-	uintptr base;
-} __packed;
-
-static inline void
-outb(ushort port, uchar data)
-{
-	asm volatile("out %0,%1" : : "a" (data), "d" (port));
-}
-
-static inline uchar
-inb(ushort port)
-{
-	uchar data;
-
-	asm volatile("in %1, %0" : "=a"(data) : "d" (port));
-	return (data);
-}
-
-#endif /* !_ASM_H_ */
+#endif /* !_UART_H_ */

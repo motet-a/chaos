@@ -7,6 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
+/* These values must match with the ones in include/arch/${ARCH}/asm.mac */
 __KERNEL_VIRTUAL_LINK = 0xC0100000;
 __KERNEL_VIRTUAL_BASE = 0xC0000000;
 
@@ -19,6 +20,7 @@ SECTIONS
 
 	.text ALIGN(0x1000) : AT(ADDR(.text) - __KERNEL_VIRTUAL_BASE)
 	{
+		KEEP(*(.header))
 		*(.text)
 	}
 

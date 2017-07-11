@@ -21,6 +21,9 @@
 # define INT_MIN		(-1 - INT_MAX)
 # define INT_MAX		(0x7FFFFFFF)
 # define UINT_MAX		(0xFFFFFFFFU)
+# define LONG_MIN		(-1 - LONG_MAX)
+# define LONG_MAX		(0x7FFFFFFFFFFFFFFF)
+# define ULONG_MAX		(0xFFFFFFFFFFFFFFFFUL)
 
 # define PAGE_SIZE		(4096)
 

@@ -7,11 +7,24 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _UART_H_
-# define _UART_H_
+#ifndef _ASM_H_
+# define _ASM_H_
 
 # include <chaosdef.h>
-# include <dev/dev.h>
 
+static inline void
+outb(ushort port, uchar data)
+{
+	asm volatile("out %0,%1" : : "a" (data), "d" (port));
+}
 
-#endif /* !_UART_H_ */
+static inline uchar
+inb(ushort port)
+{
+	uchar data;
+
+	asm volatile("in %1, %0" : "=a"(data) : "d" (port));
+	return (data);
+}
+
+#endif /* !_ASM_H_ */

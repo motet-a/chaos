@@ -7,8 +7,8 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <asm.h>
-#include <dev/uart.h>
+#include <arch/x86/asm.h>
+#include <arch/x86/devices/uart.h>
 #include <lib/io.h>
 
 # define COM1			0x3F8 /* COM1 Port */

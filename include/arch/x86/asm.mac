@@ -1,0 +1,23 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;  This file is part of the Chaos Kernel, and is made available under
+;;  the terms of the GNU General Public License version 2.
+;;
+;;  Copyright (C) 2017 - Benjamin Grange <benjamin.grange@epitech.eu>
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Constant that are defined in the linker script
+%define KERNEL_VIRTUAL_BASE	(0xC0000000)
+
+; The index of the page table containing KERNEL_VIRTUAL_BASE
+%define KERNEL_PAGE_INDEX	(KERNEL_VIRTUAL_BASE >> 22)
+
+; Macro to easily transform a virtual to physical address (and vice-versa).
+%define PHYS(x)			((x) - KERNEL_VIRTUAL_BASE)
+%define VIRT(x)			((x) + KERNEL_VIRTUAL_BASE)
+
+; These must match wth gdt.asm
+%define KERNEL_CODE_SELECTOR	(0x08)
+%define KERNEL_DATA_SELECTOR	(0x10)
+%define USER_DATA_SELECTOR	(0x18)

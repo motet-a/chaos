@@ -15,23 +15,26 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$SCRIPT_DIR/../"
 
 function print_usage {
-	echo "Usage: $0 [OPTIONS]"
-	echo "-d			debug mode"
-	echo "-t			monitor mode"
-	echo "-m <MB>			memory (in MB)"
-	echo "-h			print this help menu"
+	echo -e "Usage: $0 [OPTIONS]"
+	echo -e "\t-a <arch>		architecture (Valid values are 'x86' and 'x86_64') (Default: x86)"
+	echo -e "\t-d			debug mode"
+	echo -e "\t-t			monitor mode"
+	echo -e "\t-m <MB> 		memory (in MB) (Default: 512MB)"
+	echo -e "\t-h			print this help menu"
 	exit 1
 }
 
 DEBUG=0
 MONITOR=0
 MEMORY=512
+ARCH="x86"
 
-while getopts dthm: FLAG; do
+while getopts dthm:a: FLAG; do
 	case $FLAG in
 		d) DEBUG=1;;
 		t) MONITOR=1;;
 		m) MEMORY="$OPTARG";;
+		a) ARCH="$OPTARG";;
 		h) print_usage;;
 		\?)
 			echo "Unknown option"
@@ -41,13 +44,21 @@ done
 
 shift $((OPTIND-1))
 
-QEMU="qemu-system-i386"
+QEMU=""
+case $ARCH in
+	"x86")		QEMU="qemu-system-i386";;
+	"x86_64")	QEMU="qemu-system-x86_64";;
+	*)
+		echo "Unknown architecture $ARCH"
+		print_usage
+esac
+
 ISO="$PROJECT_DIR/chaos.iso"
 
 ARGS="-m $MEMORY -cdrom $ISO"
 
 if [ $DEBUG == 1 ]; then
-	ARGS+=" -s -d int,cpu_reset -no-reboot"
+	ARGS+=" -s -d int,cpu_reset,guest_errors -no-reboot"
 fi
 
 if [ $MONITOR == 1 ]; then

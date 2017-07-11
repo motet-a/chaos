@@ -12,10 +12,11 @@ BUILD		?= build
 ISO		?= chaos.iso
 KERNEL		?= $(BUILD)/chaos.bin
 OBJS		= $(SRC_ASM:.asm=.o) $(SRC_C:.c=.o)
+arch		?= x86
+ARCH		= $(arch)
 
 # C compilation
 CC		?= gcc
-INC		?= -Iinclude -isystem include/lib/libc
 CFLAGS		+= \
 			-m32 \
 			-MMD \
@@ -34,22 +35,22 @@ CFLAGS		+= \
 			-Wextra \
 			-std=gnu11 \
 			-O2 \
-			$(INC)
-SRC_C		:= $(shell find -name *.c)
+			-isystem include \
+			-isystem include/lib/libc
+SRC_C		:= $(shell find "arch/$(ARCH)/" drivers kernel lib -name *.c)
 DEP		:= $(SRC_C:.c=.d)
 
 # Assembly
 NASM		?= nasm
 NASMFLAGS	+= -f elf32
-SRC_ASM		:= $(shell find -name *.asm)
+SRC_ASM		:= $(shell find "arch/$(ARCH)/" drivers kernel lib -name *.asm)
 
 # Link
 LD		?= ld
-LDFLAGS		+= -n --gc-sections -m elf_i386 -T scripts/kernel.ld
+LDFLAGS		+= -n --gc-sections -m elf_i386 -T arch/$(ARCH)/kernel.ld
 
 # Tools & utilities
 RM		?= rm -f
-QEMU		?= qemu-system-i386
 
 
 all:		$(KERNEL) $(ISO)
@@ -76,16 +77,16 @@ clean:
 re:		clean all
 
 run:		$(ISO)
-		echo -e "  SHELL\t qemu-x86.sh"
-		./scripts/qemu-x86.sh -m 1G
+		echo -e "  SHELL\t qemu.sh"
+		./scripts/qemu.sh -m 1G -a $(ARCH)
 
 monitor:	all
-		echo -e "  SHELL\t qemu-x86.sh"
-		./scripts/qemu-x86.sh -t -m 1G
+		echo -e "  SHELL\t qemu.sh"
+		./scripts/qemu.sh -t -m 1G -a $(ARCH)
 
 debug:		all
-		echo -e "  SHELL\t qemu-x86.sh"
-		./scripts/qemu-x86.sh -d -m 1G
+		echo -e "  SHELL\t qemu.sh"
+		./scripts/qemu.sh -d -m 1G -a $(ARCH)
 
 %.o:		%.asm
 		$(NASM) $(NASMFLAGS) $< -o $@ && echo -e "  NASM\t $<"

@@ -8,41 +8,50 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 global start:function
+extern gdtptr_phys
+extern gdtptr
 extern main
 
-KERNEL_VIRTUAL_BASE equ 0xC0000000
-KERNEL_PAGE_INDEX equ (KERNEL_VIRTUAL_BASE >> 22)
+%include "include/arch/x86/asm.mac"
 
 section .text
-
-; Multiboot header - Must be at the very beginning of the final binary
-header_start:
-	dd 0xe85250d6			; magic number (multiboot 2)
-	dd 0				; architecture 0 (protected mode of i386)
-	dd header_end - header_start	; header length
-
-	; checksum
-	dd 0x100000000 - (0xe85250d6 + (header_end - header_start))
-
-	; required end tag
-	dw 0				; type
-	dw 0				; flags
-	dd 8				; size
-header_end:
-
+bits 32
 start:
-
-	; TODO Check that we have been booted via multiboot
+	; TODO - verify that we have been booteed via a multiboot compliant boot loader
 
 	; Until paging is set up, we should use physical addresses, not virtual ones,
-	; so a conversion (sub KERNEL_VIRTUAL_BASE) is needed.
+	; A conversion ( PHYS(addr) ) is needed.
 
-					; Set up recursivity mapping
-	mov eax, boot_page_directory - KERNEL_VIRTUAL_BASE
+	; load a temporary kernel stack using a physical pointer
+	mov esp, PHYS(kernel_stack_bottom)
+
+	jmp .common_protected
+
+.common_protected:
+	; load the new gdt
+	mov eax, PHYS(gdtptr_phys)
+	lgdt [eax]
+
+	; Load all data segment selectors
+	mov ax, KERNEL_DATA_SELECTOR
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+	mov ss, ax
+
+	; Do a far jump to update code selector
+	push dword KERNEL_CODE_SELECTOR
+	push dword PHYS(.far_jmp)
+	retf
+
+.far_jmp:
+	; Prepare paging. We will use recursive mapping
+	mov eax, PHYS(boot_page_directory)
 	or eax, 0x3
-	mov dword [boot_page_directory.last_entry - KERNEL_VIRTUAL_BASE], eax
+	mov dword [PHYS(boot_page_directory.last_entry)], eax
 
-	mov eax, boot_page_directory - KERNEL_VIRTUAL_BASE
+	mov eax, PHYS(boot_page_directory)
 	mov cr3, eax			; Load page directory
 
 	mov eax, cr4
@@ -57,12 +66,16 @@ start:
 	jmp eax
 
 .higher_half:
-	mov esp, boot_stack_bottom	; Set up boot stack
+	mov esp, kernel_stack_bottom	; reset kernel stack
+
+	lgdt [gdtptr]			; reload the gdt
 
 	; Unmap the low memory
 	mov dword [boot_page_directory.first_entry], 0
 	mov eax, cr3
-	mov cr3, eax			; Reload page directory (update TLB)
+	mov cr3, eax			; Reload page directory and update the TLB cache
+
+	; TODO load the idt
 
 	call main
 
@@ -85,6 +98,6 @@ boot_page_directory:
 section .bss
 
 align 4096
-boot_stack_bottom:
-	resb 4096 * 16			; Byte reserved for boot-time kernel stack
-boot_stack_top:
+kernel_stack_bottom:
+	resb 4096 * 16			; Byte reserved for kernel stack (at boot-time)
+kernel_stack_top:

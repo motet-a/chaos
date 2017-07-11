@@ -7,7 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <dev/dev.h>
+#include <kernel/devices.h>
 
 extern struct dev_hook const __start_dev_hooks[] __weak;
 extern struct dev_hook const __stop_dev_hooks[] __weak;
