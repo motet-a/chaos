@@ -7,8 +7,8 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _STDDEF_H_
-# define _STDDEF_H_
+#ifndef _LIBC_STDDEF_H_
+# define _LIBC_STDDEF_H_
 
 # define NULL			((void *)0u)
 # define PAGE_SIZE		(4096u)
@@ -20,4 +20,4 @@
 
 # define offsetof(t, m)		__builtin_offsetof(t, m)
 
-#endif /* !_STDDEF_H_ */
+#endif /* !_LIBC_STDDEF_H_ */
