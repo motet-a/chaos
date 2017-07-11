@@ -8,8 +8,8 @@ It's a unix-like featureless kernel, that only supports x86 (Intel 32 bits). My 
 * `nasm`
 * `make`
 * `gcc` or `clang`
-* `grub-mkrescue` (generally packed with other binaries as `grub-pc-bin`)
-* `qemu` and `xorriso` (cpu emulator) *optional*
+* `grub-mkrescue` and `xorriso` (generally packed with other binaries as `grub`)
+* `qemu` (cpu emulator) *optional*
 
 If you are using `apt-get` as your package manager (`Debian`, `Ubuntu` etc.), you can use this command to install all dependencies:
 ```bash
