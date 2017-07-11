@@ -23,7 +23,7 @@ start:
 	; A conversion ( PHYS(addr) ) is needed.
 
 	; load a temporary kernel stack using a physical pointer
-	mov esp, PHYS(kernel_stack_bottom)
+	mov esp, PHYS(kernel_stack_top)
 
 	jmp .common_protected
 
@@ -66,7 +66,7 @@ start:
 	jmp eax
 
 .higher_half:
-	mov esp, kernel_stack_bottom	; reset kernel stack
+	mov esp, kernel_stack_top	; reset kernel stack
 
 	lgdt [gdtptr]			; reload the gdt
 
