@@ -11,6 +11,7 @@
 #include <drivers/drivers.h>
 #include <drivers/tty.h>
 #include <lib/io.h>
+#include <string.h>
 
 /* Global definitions */
 static struct tty tty;
@@ -38,9 +39,15 @@ tty_clear(void)
 
 	i = 0;
 	blank = tty.vga_attrib | 0x20;
-	while (i < TTY_WIDTH * TTY_HEIGHT)
+	while (i < TTY_WIDTH)
 	{
 		*(tty.vgabuff + i) = blank;
+		++i;
+	}
+	i = 1;
+	while (i < TTY_HEIGHT)
+	{
+		memcpy(tty.vgabuff + TTY_WIDTH * i, tty.vgabuff, sizeof(*tty.vgabuff) * TTY_WIDTH);
 		++i;
 	}
 }
