@@ -8,8 +8,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 global start:function
+
 extern gdtptr_phys
 extern gdtptr
+extern idt_setup
 extern main
 
 %include "include/arch/x86/asm.mac"
@@ -41,7 +43,7 @@ start:
 	mov ss, ax
 
 	; Do a far jump to update code selector
-	push dword KERNEL_CODE_SELECTOR
+	push dword CODE_SELECTOR
 	push dword PHYS(.far_jmp)
 	retf
 
@@ -75,7 +77,7 @@ start:
 	mov eax, cr3
 	mov cr3, eax			; Reload page directory and update the TLB cache
 
-	; TODO load the idt
+	call idt_setup			; setup the Interrupt Descriptor Table
 
 	call main
 

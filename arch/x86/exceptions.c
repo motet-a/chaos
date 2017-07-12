@@ -7,18 +7,11 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <kernel/init.h>
-#include <drivers/tty.h>
+#include <arch/x86/x86.h>
 #include <stdio.h>
 
-#include <arch/x86/asm.h>
-
-int
-main()
+void
+x86_exception_handler(struct regs *regs )
 {
-	kernel_init_level(CHAOS_INIT_LEVEL_EARLIEST, CHAOS_INIT_LEVEL_LATEST);
-	printf("Welcome to ChaOS\n");
-	interrupt(3);
-	printf("Survived\n");
-	return (0);
+	printf("In exception handler. Exception num: %#hhx !\n", regs->int_num);
 }

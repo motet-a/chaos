@@ -27,4 +27,10 @@ inb(ushort port)
 	return (data);
 }
 
+static inline void
+interrupt(uchar i)
+{
+	asm volatile("int %0" :: "i" (i));
+}
+
 #endif /* !_ASM_H_ */
