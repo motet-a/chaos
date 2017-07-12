@@ -7,8 +7,8 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _DRIVERS_H_
-# define _DRIVERS_H_
+#ifndef _DRIVERS_DRIVERS_H_
+# define _DRIVERS_DRIVERS_H_
 
 # include <kernel/init.h>
 
@@ -21,6 +21,13 @@ struct	driver_hook
 	char const *name;
 };
 
+/*
+** Creates and add a new driver hook.
+** Parameters:
+**	- n: The name of the hook
+**	- h: A function pointer to call when this hook is triggered
+**	- l: The init level telling when to trigger this hook
+*/
 # define NEW_DRIVER_HOOK(n, h, l)					\
 	__aligned(sizeof(void*)) __used __section("driver_hooks")	\
 	static const struct driver_hook _driver_hook_struct_##n = {	\
@@ -30,4 +37,4 @@ struct	driver_hook
 	}
 
 
-#endif /* !_DRIVERS_H_ */
+#endif /* !_DRIVERS_DRIVERS_H_ */

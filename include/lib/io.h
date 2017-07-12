@@ -7,8 +7,8 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _IO_H_
-# define _IO_H_
+#ifndef _LIB_IO_H_
+# define _LIB_IO_H_
 
 typedef char	(*io_getc_cb)(void);
 typedef int	(*io_putc_cb)(int);
@@ -38,4 +38,4 @@ char	io_getc(void);
 void	register_io_output_callbacks(struct io_output_callbacks *, enum io_output_types);
 void	register_io_input_callbacks(struct io_input_callbacks *);
 
-#endif /* !_IO_H_ */
+#endif /* !_LIB_IO_H_ */

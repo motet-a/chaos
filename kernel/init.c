@@ -12,6 +12,9 @@
 extern struct init_hook const __start_chaos_init[] __weak;
 extern struct init_hook const __stop_chaos_init[] __weak;
 
+/*
+** Find the next un-called hook which level is between the two given one.
+*/
 static struct init_hook const *
 find_next_hook(struct init_hook const *last, enum init_level last_level, enum init_level end_level)
 {
@@ -43,6 +46,9 @@ find_next_hook(struct init_hook const *last, enum init_level last_level, enum in
 	return (found);
 }
 
+/*
+** Init all levels between the two one given in parameter, included.
+*/
 void
 kernel_init_level(enum init_level start_level, enum init_level end_level)
 {

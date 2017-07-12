@@ -18,8 +18,8 @@
 #define		USER_DATA_SELECTOR	(0x18)
 
 /*
-** This structure represents the registers and all other informatios that
-** an interrupt handler receives when triggered.
+** This structure represents the registers and all other informations that
+** each interrupt handler receives when triggered.
 */
 struct		regs
 {

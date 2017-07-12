@@ -10,6 +10,10 @@
 #include <chaosdef.h>
 #include <stdio.h>
 
+/*
+** Make the kernel panic with the given error message.
+** Never returns.
+*/
 void
 panic(const char *fmt, ...)
 {

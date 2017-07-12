@@ -7,10 +7,10 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _UART_H_
-# define _UART_H_
+#ifndef _ARCH_X86_DEVICES_UART_H_
+# define _ARCH_X86_DEVICES_UART_H_
 
 # include <chaosdef.h>
 # include <kernel/devices.h>
 
-#endif /* !_UART_H_ */
+#endif /* !_ARCH_X86_DEVICES_UART_H_ */

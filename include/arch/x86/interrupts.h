@@ -13,6 +13,9 @@
 # include <chaosdef.h>
 # include <arch/x86/x86.h>
 
+/*
+** An enum of all common interruptions.
+*/
 enum		x86_interrupts
 {
 	X86_INT_DIVIDE_BY_ZERO		= 0,
@@ -57,6 +60,9 @@ enum		x86_interrupts
 	X86_INT_MAX			= 0xFF,
 };
 
+/*
+** An enum of all interrupt types
+*/
 enum		idt_entry_type
 {
 	IDT_TASK_GATE_32		= 0x5,
@@ -66,6 +72,9 @@ enum		idt_entry_type
 	IDT_TRAP_GATE_32		= 0xF,
 };
 
+/*
+** A structure representing an entry in the IDT
+*/
 struct		idt_entry
 {
 	uint16 callback_low;
@@ -73,12 +82,6 @@ struct		idt_entry
 	uint8 __zero; /* Must be zero */
 	uint8 flags;
 	uint16 callback_high;
-} __packed;
-
-struct		idtr
-{
-	uint16 size;
-	uintptr address;
 } __packed;
 
 typedef void (*int_handler)(struct regs *);

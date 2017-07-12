@@ -10,6 +10,9 @@
 #include <arch/x86/x86.h>
 #include <stdio.h>
 
+/*
+** Common handler for all exceptions.
+*/
 void
 x86_exception_handler(struct regs *regs )
 {

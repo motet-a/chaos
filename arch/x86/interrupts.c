@@ -13,6 +13,9 @@
 /* Defined in idt.asm */
 extern struct idt_entry idt[X86_INT_MAX];
 
+/*
+** Set the present flag for the given idt entry
+*/
 static inline void
 idt_set_present(struct idt_entry *entry, bool p)
 {
@@ -20,6 +23,9 @@ idt_set_present(struct idt_entry *entry, bool p)
 	entry->flags |= p << 7u;
 }
 
+/*
+** Set the ring level for the given idt entry
+*/
 static inline void
 idt_set_dpl(struct idt_entry *entry, enum dpl dpl)
 {
@@ -28,6 +34,9 @@ idt_set_dpl(struct idt_entry *entry, enum dpl dpl)
 	entry->flags |= dpl << 5u;
 }
 
+/*
+** Set the interrupt type for the given idt entry
+*/
 static inline void
 idt_set_type(struct idt_entry *entry, enum idt_entry_type type)
 {
@@ -35,6 +44,9 @@ idt_set_type(struct idt_entry *entry, enum idt_entry_type type)
 	entry->flags |= type;
 }
 
+/*
+** Set the interrupt callback for the given idt entry
+*/
 static inline void
 idt_set_callback(struct idt_entry *entry, uintptr ep)
 {
@@ -42,12 +54,18 @@ idt_set_callback(struct idt_entry *entry, uintptr ep)
 	entry->callback_high = (ep & 0xFFFF0000u) >> 16u;
 }
 
+/*
+** Set the segment selector for the given idt entry
+*/
 static inline void
 idt_set_segment_sel(struct idt_entry *entry, uint16 sel)
 {
 	entry->selector = sel;
 }
 
+/*
+** Updates an IDT entry with the given parameters.
+*/
 void
 idt_set_vector(uint8 vec, uintptr callback, uint16 sel, enum dpl dpl, enum idt_entry_type type)
 {
@@ -61,5 +79,3 @@ idt_set_vector(uint8 vec, uintptr callback, uint16 sel, enum dpl dpl, enum idt_e
 	idt_set_callback(entry, callback);
 	idt_set_segment_sel(entry, sel);
 }
-
-

@@ -7,8 +7,8 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _ASM_H_
-# define _ASM_H_
+#ifndef _ARCH_X86_ASM_H_
+# define _ARCH_X86_ASM_H_
 
 # include <chaosdef.h>
 
@@ -33,4 +33,4 @@ interrupt(uchar i)
 	asm volatile("int %0" :: "i" (i));
 }
 
-#endif /* !_ASM_H_ */
+#endif /* !_ARCH_X86_ASM_H_ */

@@ -7,11 +7,14 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _TTY_H_
-# define _TTY_H_
+#ifndef _DRIVERS_TTY_H_
+# define _DRIVERS_TTY_H_
 
 # include <chaosdef.h>
 
+/*
+** All the colors that a tty can handle
+*/
 enum			TTY_COLOR
 {
 	TTY_BLACK	= 0,
@@ -43,4 +46,4 @@ struct			tty
 void			tty_set_color(enum TTY_COLOR, enum TTY_COLOR);
 void			tty_clear(void);
 
-#endif /* !_TTY_H_ */
+#endif /* !_DRIVERS_TTY_H_ */

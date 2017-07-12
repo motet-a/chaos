@@ -13,6 +13,9 @@
 
 #include <arch/x86/asm.h>
 
+/*
+** Common entry point of the kernel.
+*/
 int
 main()
 {

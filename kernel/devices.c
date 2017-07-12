@@ -12,7 +12,10 @@
 extern struct dev_hook const __start_dev_hooks[] __weak;
 extern struct dev_hook const __stop_dev_hooks[] __weak;
 
-void
+/*
+** Run all device hook of given init level
+*/
+static void
 dev_run_hooks(enum init_level il)
 {
 	struct dev_hook const *hook;
@@ -27,6 +30,9 @@ dev_run_hooks(enum init_level il)
 	}
 }
 
+/*
+** Init all devices of given init level
+*/
 void
 dev_init(enum init_level il)
 {

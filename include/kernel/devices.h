@@ -21,6 +21,13 @@ struct	dev_hook
 	char const *name;
 };
 
+/*
+** Creates and add a new device hook.
+** Parameters:
+**	- n: The name of the hook
+**	- h: A function pointer to call when this hook is triggered
+**	- l: The init level telling when to trigger this hook
+*/
 # define NEW_DEV_HOOK(n, h, l)						\
 	__aligned(sizeof(void*)) __used __section("dev_hooks")		\
 	static const struct dev_hook _dev_hook_struct_##n = {		\

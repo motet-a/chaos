@@ -19,7 +19,7 @@ static uint const	TTY_HEIGHT	= 25;
 static uint16 *const	TTY_BUFFER	= (uint16*)((char *)KERNEL_VIRTUAL_BASE + 0xB8000);
 
 /*
-** Set the current color, for future outputs
+** Sets the current color for next outputs
 */
 void
 tty_set_color(enum TTY_COLOR fg, enum TTY_COLOR bg)
@@ -28,7 +28,7 @@ tty_set_color(enum TTY_COLOR fg, enum TTY_COLOR bg)
 }
 
 /*
-** Clear the screen
+** Clears the screen
 */
 void
 tty_clear(void)
@@ -46,7 +46,7 @@ tty_clear(void)
 }
 
 /*
-** Print a single character on the screen
+** Prints a single character on the screen
 */
 static int
 tty_putchar(int c)
@@ -73,7 +73,7 @@ tty_putchar(int c)
 }
 
 /*
-** Print an array of character on the screen
+** Prints an array of characters on the screen
 */
 static int
 tty_puts(char const *str)
@@ -89,7 +89,7 @@ tty_puts(char const *str)
 }
 
 /*
-** Initialize the tty driver
+** Initializes the tty driver
 */
 static void
 tty_init(enum init_level il __unused)
@@ -99,7 +99,7 @@ tty_init(enum init_level il __unused)
 	cb.putc = tty_putchar;
 	cb.puts = tty_puts;
 	tty.vgabuff = TTY_BUFFER;
-	tty_set_color(TTY_WHITE, TTY_DARK_GREY);
+	tty_set_color(TTY_LIGHT_PINK, TTY_BLACK);
 	tty_clear();
 	register_io_output_callbacks(&cb, IO_OUTPUT_CONSOLE);
 }
