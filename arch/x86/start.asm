@@ -12,7 +12,7 @@ global start:function
 extern gdtptr_phys
 extern gdtptr
 extern idt_setup
-extern main
+extern kernel_main
 
 %include "include/arch/x86/asm.mac"
 
@@ -79,7 +79,7 @@ start:
 
 	call idt_setup			; setup the Interrupt Descriptor Table
 
-	call main
+	call kernel_main
 
 	hlt				; And catch fire
 	jmp $

@@ -7,9 +7,9 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <arch/x86/asm.h> /* TODO make something cross-platform for outb / inb */
+#include <arch/x86/asm.h>
+#include <arch/x86/devices/keyboard.h>
 #include <drivers/drivers.h>
-#include <drivers/keyboard.h>
 #include <lib/interrupts.h>
 #include <stdio.h>
 

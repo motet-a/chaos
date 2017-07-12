@@ -18,7 +18,7 @@
 ** Common entry point of the kernel.
 */
 int
-main()
+kernel_main()
 {
 	kernel_init_level(CHAOS_INIT_LEVEL_EARLIEST, CHAOS_INIT_LEVEL_LATEST);
 	printf("Welcome to ChaOS\n");
