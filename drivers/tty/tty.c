@@ -47,7 +47,26 @@ tty_clear(void)
 	i = 1;
 	while (i < TTY_HEIGHT)
 	{
-		memcpy(tty.vgabuff + TTY_WIDTH * i, tty.vgabuff, sizeof(*tty.vgabuff) * TTY_WIDTH);
+		memcpy(tty.vgabuff + TTY_WIDTH * i, tty.vgabuff, sizeof(uint16) * TTY_WIDTH);
+		++i;
+	}
+}
+
+/*
+** Scrolls the text
+*/
+static void
+tty_scroll(void)
+{
+	uint16 blank;
+	size_t i = 0;
+
+	i = 0;
+	blank = tty.vga_attrib | 0x20;
+	memcpy(tty.vgabuff, tty.vgabuff + TTY_WIDTH, (TTY_HEIGHT - 1) * TTY_WIDTH * sizeof(uint16));
+	while (i < TTY_WIDTH)
+	{
+		*(tty.vgabuff + (TTY_HEIGHT - 1) * TTY_WIDTH + i) = blank;
 		++i;
 	}
 }
@@ -79,7 +98,7 @@ tty_putchar(int c)
 	tty.cursor_y += (tty.cursor_x >= TTY_WIDTH);
 	tty.cursor_x *= (tty.cursor_x < TTY_WIDTH);
 	while (tty.cursor_y >= TTY_HEIGHT) {
-		/* TODO add scroll here */
+		tty_scroll();
 		tty.cursor_y -= 1;
 	}
 	return (1);
