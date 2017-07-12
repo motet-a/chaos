@@ -60,9 +60,15 @@ tty_putchar(int c)
 {
 	switch (c)
 	{
-	case '\n':
+	case '\n': /* new line */
 		tty.cursor_x = 0;
 		tty.cursor_y++;
+		break;
+	case '\t':
+		tty.cursor_x = (tty.cursor_x + 8u) & ~7u;
+		break;
+	case '\r':
+		tty.cursor_x = 0;
 		break;
 	default:
 		*(tty.vgabuff + tty.cursor_y * TTY_WIDTH + tty.cursor_x) =
