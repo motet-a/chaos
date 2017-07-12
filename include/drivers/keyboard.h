@@ -7,14 +7,12 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <arch/x86/x86.h>
-#include <stdio.h>
+#ifndef _DRIVERS_KEYBOARD_H_
+# define _DRIVERS_KEYBOARD_H_
 
-/*
-** Common handler for all exceptions.
-*/
-void
-x86_exception_handler(struct regs *regs )
-{
-	printf("In exception handler. Exception num: %#hhx !\n", regs->int_num);
-}
+# include <chaosdef.h>
+
+# define KEYBOARD_INT_HANDLER		0x01
+# define KEYBOARD_IO_PORT		0x60
+
+#endif /* !_DRIVERS_KEYBOARD_H_ */

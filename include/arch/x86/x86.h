@@ -30,7 +30,7 @@ struct		regs
 		uintptr edi;
 		uintptr esi;
 		uintptr ebp;
-		uintptr esp;
+		uintptr _popa_esp;
 		uintptr ebx;
 		uintptr edx;
 		uintptr ecx;
@@ -40,7 +40,7 @@ struct		regs
 		uintptr eip;
 		uintptr cs;
 		uintptr eflags;
-		uintptr user_esp;
+		uintptr esp;
 		uintptr ss;
 };
 

@@ -25,6 +25,7 @@ enum				status
 
 	/* Internal errors */
 	ERR_INTERNAL,			/* Internal / unspecified error. Keep this one for extrem cases. */
+	ERR_NOT_IMPLEMENTED,		/* Operation is not implemented */
 	ERR_NOT_SUPPORTED,		/* Operation is not supported */
 	ERR_NO_MEMORY,			/* Operation couldn't complete because it went out of memory */
 	ERR_INTERRUPTED,		/* Operation got interrupted */
@@ -44,8 +45,8 @@ enum				status
 
 	/* Input / output errors */
 	ERR_IO,				/* I/O error */
-}
+};
 
-typedef enum status	status;
+typedef enum status	status_t;
 
 #endif /* !_CHAOS_ERR_H_ */

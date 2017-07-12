@@ -13,7 +13,12 @@ bits 32
 global idt
 global idt_setup
 extern x86_exception_handler
-extern idt_set_vector
+extern x86_idt_set_vector
+extern x86_irq_handler
+
+%define NO_ERROR_CODE	0
+%define ERROR_CODE	1
+%define IRQ		2
 
 ; Generates an exception handler that saves the current registers,
 ; calls the exception handler and restores registers.
@@ -27,7 +32,7 @@ extern idt_set_vector
 %macro NEW_EXCEPTION_HANDLER 3
 	global x86_%2_handler:function
 	x86_%2_handler:
-%if %3 == 0
+%if %3 != 1
 		push dword 0	; Push dummy error code
 %endif
 		push dword %1	; Push the interrupt number
@@ -45,7 +50,11 @@ extern idt_set_vector
 		mov gs, ax
 
 		push esp	; Push the stack frame on the stack
+%if %3 == 2
+		call x86_irq_handler
+%else
 		call x86_exception_handler
+%endif
 		add esp, 4	; Pop stack frame
 
 		pop gs		; Restore segment registers
@@ -63,34 +72,54 @@ extern idt_set_vector
 %macro ADD_IDT_ENTRY 2
 	push x86_%2_handler
 	push %1
-	call idt_set_vector
+	call x86_idt_set_vector
 	add esp, 8
 %endmacro
 
 ; Generate all the exception handlers
 ;
 ; MACRO				ID		NAME				ERROR_CODE
-NEW_EXCEPTION_HANDLER		0x0,		division_by_zero,		false
-NEW_EXCEPTION_HANDLER		0x1,		debug,				false
-NEW_EXCEPTION_HANDLER		0x2,		nmi,				false
-NEW_EXCEPTION_HANDLER		0x3,		breakpoint,			false
-NEW_EXCEPTION_HANDLER		0x4,		overflow,			false
-NEW_EXCEPTION_HANDLER		0x5,		out_of_bounds,			false
-NEW_EXCEPTION_HANDLER		0x6,		invalid_opcode,			false
-NEW_EXCEPTION_HANDLER		0x7,		device_na,			false
-NEW_EXCEPTION_HANDLER		0x8,		double_fault,			true
-NEW_EXCEPTION_HANDLER		0x9,		fpu_segment_overrun,		false
-NEW_EXCEPTION_HANDLER		0xA,		invalid_tss,			true
-NEW_EXCEPTION_HANDLER		0xB,		segment_not_present,		true
-NEW_EXCEPTION_HANDLER		0xC,		stack_fault,			true
-NEW_EXCEPTION_HANDLER		0xD,		gp_fault,			true
-NEW_EXCEPTION_HANDLER		0xE,		page_fault,			true
-NEW_EXCEPTION_HANDLER		0xF,		unknown_int,			false
-NEW_EXCEPTION_HANDLER		0x10,		fpu_exception,			false
-NEW_EXCEPTION_HANDLER		0x11,		alignment_check,		true
-NEW_EXCEPTION_HANDLER		0x12,		machine_check,			false
-NEW_EXCEPTION_HANDLER		0x13,		simd_fd_exception,		false
-NEW_EXCEPTION_HANDLER		0x14,		virt_exception,			false
+NEW_EXCEPTION_HANDLER		0x0,		division_by_zero,		NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x1,		debug,				NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x2,		nmi,				NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x3,		breakpoint,			NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x4,		overflow,			NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x5,		out_of_bounds,			NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x6,		invalid_opcode,			NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x7,		device_na,			NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x8,		double_fault,			ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x9,		fpu_segment_overrun,		NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0xA,		invalid_tss,			ERROR_CODE
+NEW_EXCEPTION_HANDLER		0xB,		segment_not_present,		ERROR_CODE
+NEW_EXCEPTION_HANDLER		0xC,		stack_fault,			ERROR_CODE
+NEW_EXCEPTION_HANDLER		0xD,		gp_fault,			ERROR_CODE
+NEW_EXCEPTION_HANDLER		0xE,		page_fault,			ERROR_CODE
+NEW_EXCEPTION_HANDLER		0xF,		unknown_int,			NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x10,		fpu_exception,			NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x11,		alignment_check,		ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x12,		machine_check,			NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x13,		simd_fd_exception,		NO_ERROR_CODE
+NEW_EXCEPTION_HANDLER		0x14,		virt_exception,			NO_ERROR_CODE
+
+; Generate all the IRQ handler
+;
+; MACRO				ID		NAME				IRQ
+NEW_EXCEPTION_HANDLER		0x0,		irq_0,				IRQ
+NEW_EXCEPTION_HANDLER		0x1,		irq_1,				IRQ
+NEW_EXCEPTION_HANDLER		0x2,		irq_2,				IRQ
+NEW_EXCEPTION_HANDLER		0x3,		irq_3,				IRQ
+NEW_EXCEPTION_HANDLER		0x4,		irq_4,				IRQ
+NEW_EXCEPTION_HANDLER		0x5,		irq_5,				IRQ
+NEW_EXCEPTION_HANDLER		0x6,		irq_6,				IRQ
+NEW_EXCEPTION_HANDLER		0x7,		irq_7,				IRQ
+NEW_EXCEPTION_HANDLER		0x8,		irq_8,				IRQ
+NEW_EXCEPTION_HANDLER		0x9,		irq_9,				IRQ
+NEW_EXCEPTION_HANDLER		0xA,		irq_A,				IRQ
+NEW_EXCEPTION_HANDLER		0xB,		irq_B,				IRQ
+NEW_EXCEPTION_HANDLER		0xC,		irq_C,				IRQ
+NEW_EXCEPTION_HANDLER		0xD,		irq_D,				IRQ
+NEW_EXCEPTION_HANDLER		0xE,		irq_E,				IRQ
+NEW_EXCEPTION_HANDLER		0xF,		irq_F,				IRQ
 
 section .data
 align 16
@@ -139,6 +168,24 @@ idt_setup:
 	ADD_IDT_ENTRY		0x12,		machine_check
 	ADD_IDT_ENTRY		0x13,		simd_fd_exception
 	ADD_IDT_ENTRY		0x14,		virt_exception
+
+	; Add all the IRQ in the IDT (remapped)
+	ADD_IDT_ENTRY		0x20,		irq_0
+	ADD_IDT_ENTRY		0x21,		irq_1
+	ADD_IDT_ENTRY		0x22,		irq_2
+	ADD_IDT_ENTRY		0x23,		irq_3
+	ADD_IDT_ENTRY		0x24,		irq_4
+	ADD_IDT_ENTRY		0x25,		irq_5
+	ADD_IDT_ENTRY		0x26,		irq_6
+	ADD_IDT_ENTRY		0x27,		irq_7
+	ADD_IDT_ENTRY		0x28,		irq_8
+	ADD_IDT_ENTRY		0x29,		irq_9
+	ADD_IDT_ENTRY		0x2A,		irq_A
+	ADD_IDT_ENTRY		0x2B,		irq_B
+	ADD_IDT_ENTRY		0x2C,		irq_C
+	ADD_IDT_ENTRY		0x2D,		irq_D
+	ADD_IDT_ENTRY		0x2E,		irq_E
+	ADD_IDT_ENTRY		0x2F,		irq_F
 
 	add esp, 12
 

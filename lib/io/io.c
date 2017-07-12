@@ -28,17 +28,20 @@ default_getc(void)
 	return (-1);
 }
 
-static struct io_output_callbacks	serial_cb = {
+static struct io_output_callbacks	serial_cb =
+{
 	.putc = &default_putc,
 	.puts = &default_puts,
 };
 
-static struct io_output_callbacks	console_cb = {
+static struct io_output_callbacks	console_cb =
+{
 	.putc = &default_putc,
 	.puts = &default_puts,
 };
 
-static struct io_input_callbacks	input_cb = {
+static struct io_input_callbacks	input_cb =
+{
 	.getc = &default_getc,
 };
 

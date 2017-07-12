@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include <arch/x86/asm.h>
+#include <lib/interrupts.h>
 
 /*
 ** Common entry point of the kernel.
@@ -21,7 +22,5 @@ main()
 {
 	kernel_init_level(CHAOS_INIT_LEVEL_EARLIEST, CHAOS_INIT_LEVEL_LATEST);
 	printf("Welcome to ChaOS\n");
-	interrupt(3);
-	printf("Survived\n");
 	return (0);
 }

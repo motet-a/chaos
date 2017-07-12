@@ -12,6 +12,17 @@
 
 # include <chaosdef.h>
 # include <arch/x86/x86.h>
+# include <arch/x86/asm.h>
+
+/*
+** Send reset signal to slave PIC
+*/
+# define RESET_SLAVE_PIC()	outb(0xA0, 0x20);
+
+/*
+** Send reset signal to master PIC
+*/
+# define RESET_MASTER_PIC()	outb(0x20, 0x20);
 
 /*
 ** An enum of all common interruptions.
@@ -84,6 +95,6 @@ struct		idt_entry
 	uint16 callback_high;
 } __packed;
 
-typedef void (*int_handler)(struct regs *);
+typedef void (*x86_int_handler)(struct regs *);
 
 #endif /* !_ARCH_X86_INTERRUPTS_H_ */
