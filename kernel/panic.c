@@ -7,6 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <lib/interrupts.h>
 #include <chaosdef.h>
 #include <stdio.h>
 
@@ -19,12 +20,12 @@ panic(const char *fmt, ...)
 {
 	va_list va;
 
-	/* TODO: disable interrupts */
+	disable_interrupts();
 	va_start(va, fmt);
 	printf("\nKernel panicked: ");
 	vprintf(fmt, va);
 	va_end(va);
 	for (;;)
-	  ;
+		;
 }
 
