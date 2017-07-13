@@ -15,7 +15,7 @@ RUN apt-get update \
 
 WORKDIR /chaos
 COPY arch /chaos/arch
-COPY drivers /chaos/drivers
+COPY platform /chaos/platform
 COPY include /chaos/include
 COPY kernel /chaos/kernel
 COPY lib /chaos/lib
