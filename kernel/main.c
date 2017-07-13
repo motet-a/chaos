@@ -8,11 +8,7 @@
 \* ------------------------------------------------------------------------ */
 
 #include <kernel/init.h>
-#include <drivers/tty.h>
 #include <stdio.h>
-
-#include <arch/x86/asm.h>
-#include <lib/interrupts.h>
 
 /*
 ** Common entry point of the kernel.
