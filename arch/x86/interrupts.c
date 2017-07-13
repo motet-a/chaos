@@ -100,27 +100,13 @@ x86_unmask_interrupt(uint vector)
 static void
 x86_enable_interrupts(void)
 {
-	size_t i;
-
-	i = 0;
-	while (i < X86_INT_MAX)
-	{
-		idt_set_present(idt + i, true);
-		++i;
-	}
+	sti();
 }
 
 static void
 x86_disable_interrupts(void)
 {
-	size_t i;
-
-	i = 0;
-	while (i < X86_INT_MAX)
-	{
-		idt_set_present(idt + i, false);
-		++i;
-	}
+	cli();
 }
 
 static void
