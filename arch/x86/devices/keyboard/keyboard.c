@@ -7,9 +7,9 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <kernel/init.h>
 #include <arch/x86/asm.h>
 #include <arch/x86/devices/keyboard.h>
-#include <drivers/drivers.h>
 #include <lib/interrupts.h>
 #include <stdio.h>
 
@@ -70,4 +70,4 @@ keyboard_init(enum init_level il __unused)
 	register_int_handler(KEYBOARD_INT_HANDLER, &keyboard_int_handler);
 }
 
-NEW_DRIVER_HOOK(keyboard, &keyboard_init, CHAOS_INIT_LEVEL_DRIVER);
+NEW_INIT_HOOK(keyboard, &keyboard_init, CHAOS_INIT_LEVEL_DEV_EARLY);

@@ -7,7 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <kernel/devices.h>
+#include <kernel/init.h>
 #include <arch/x86/interrupts.h>
 #include <arch/x86/asm.h>
 #include <lib/interrupts.h>
@@ -137,4 +137,4 @@ interrupt_init(enum init_level il __unused)
 	sti();
 }
 
-NEW_DEV_HOOK(idt_early, &interrupt_init, CHAOS_INIT_LEVEL_DEV_EARLY);
+NEW_INIT_HOOK(idt_early, &interrupt_init, CHAOS_INIT_LEVEL_DEV_EARLY);

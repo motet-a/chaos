@@ -7,8 +7,8 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <kernel/init.h>
 #include <arch/x86/asm.h>
-#include <arch/x86/devices/uart.h>
 #include <lib/io.h>
 
 # define COM1			0x3F8 /* COM1 Port */
@@ -53,4 +53,4 @@ uart_init(enum init_level il __unused)
 	}
 }
 
-NEW_DEV_HOOK(uart, &uart_init, CHAOS_INIT_LEVEL_DEV_EARLY);
+NEW_INIT_HOOK(uart, &uart_init, CHAOS_INIT_LEVEL_DEV_EARLY);
