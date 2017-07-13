@@ -14,6 +14,7 @@ KERNEL		?= $(BUILD)/chaos.bin
 OBJS		= $(SRC_ASM:.asm=.o) $(SRC_C:.c=.o)
 arch		?= x86
 ARCH		= $(arch)
+PLATFORM	= $(shell ./scripts/get_platform.sh $(ARCH))
 
 # C compilation
 CC		?= gcc
@@ -37,13 +38,13 @@ CFLAGS		+= \
 			-O2 \
 			-isystem include \
 			-isystem include/lib/libc
-SRC_C		:= $(shell find "arch/$(ARCH)/" kernel lib -name *.c)
+SRC_C		:= $(shell find "arch/$(ARCH)/" "platform/$(PLATFORM)" kernel lib -name *.c)
 DEP		:= $(SRC_C:.c=.d)
 
 # Assembly
 NASM		?= nasm
 NASMFLAGS	+= -f elf32
-SRC_ASM		:= $(shell find "arch/$(ARCH)/" kernel lib -name *.asm)
+SRC_ASM		:= $(shell find "arch/$(ARCH)/" -name *.asm)
 
 # Link
 LD		?= ld
