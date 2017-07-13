@@ -137,4 +137,4 @@ interrupt_init(enum init_level il __unused)
 	sti();
 }
 
-NEW_INIT_HOOK(idt_early, &interrupt_init, CHAOS_INIT_LEVEL_DEV_EARLY);
+NEW_INIT_HOOK(idt_early, &interrupt_init, CHAOS_INIT_LEVEL_ARCH_EARLY);

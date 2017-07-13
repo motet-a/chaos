@@ -53,4 +53,4 @@ uart_init(enum init_level il __unused)
 	}
 }
 
-NEW_INIT_HOOK(uart, &uart_init, CHAOS_INIT_LEVEL_DEV_EARLY);
+NEW_INIT_HOOK(uart, &uart_init, CHAOS_INIT_LEVEL_PLATFORM_EARLY);

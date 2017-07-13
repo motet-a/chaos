@@ -9,7 +9,7 @@
 
 #include <kernel/linker.h>
 #include <kernel/init.h>
-#include <arch/x86/devices/vga.h>
+#include <platform/pc/vga.h>
 #include <lib/io.h>
 #include <string.h>
 
@@ -136,4 +136,4 @@ vga_init(enum init_level il __unused)
 	register_io_output_callbacks(&cb, IO_OUTPUT_CONSOLE);
 }
 
-NEW_INIT_HOOK(vga_init, &vga_init, CHAOS_INIT_LEVEL_DEV_EARLY);
+NEW_INIT_HOOK(vga_init, &vga_init, CHAOS_INIT_LEVEL_PLATFORM_EARLY);
