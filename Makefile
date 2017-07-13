@@ -37,13 +37,13 @@ CFLAGS		+= \
 			-O2 \
 			-isystem include \
 			-isystem include/lib/libc
-SRC_C		:= $(shell find "arch/$(ARCH)/" drivers kernel lib -name *.c)
+SRC_C		:= $(shell find "arch/$(ARCH)/" kernel lib -name *.c)
 DEP		:= $(SRC_C:.c=.d)
 
 # Assembly
 NASM		?= nasm
 NASMFLAGS	+= -f elf32
-SRC_ASM		:= $(shell find "arch/$(ARCH)/" drivers kernel lib -name *.asm)
+SRC_ASM		:= $(shell find "arch/$(ARCH)/" kernel lib -name *.asm)
 
 # Link
 LD		?= ld
