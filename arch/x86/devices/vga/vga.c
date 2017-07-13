@@ -63,7 +63,7 @@ vga_scroll(void)
 
 	i = 0;
 	blank = vga.vga_attrib | 0x20;
-	memcpy(vga.vgabuff, vga.vgabuff + VGA_WIDTH, (VGA_HEIGHT - 1) * VGA_WIDTH * sizeof(uint16));
+	memmove(vga.vgabuff, vga.vgabuff + VGA_WIDTH, (VGA_HEIGHT - 1) * VGA_WIDTH * sizeof(uint16));
 	while (i < VGA_WIDTH)
 	{
 		*(vga.vgabuff + (VGA_HEIGHT - 1) * VGA_WIDTH + i) = blank;

@@ -51,6 +51,25 @@ memcpy(void *dest, void const *src, size_t n)
 	return (dest);
 }
 
+void *
+memmove(void *dest, void const *src, size_t n)
+{
+	unsigned char *d;
+	unsigned char const *s;
+
+	s = src;
+	d = dest;
+	if (s > d) {
+		while (n-- > 0)
+			*d++ = *s++;
+	}
+	else {
+		while (n-- > 0)
+			d[n] = s[n];
+	}
+	return (dest);
+}
+
 int
 memcmp(void const *s1, void const *s2, size_t n)
 {
