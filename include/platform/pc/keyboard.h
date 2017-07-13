@@ -7,12 +7,12 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _ARCH_X86_DEVICES_KEYBOARD_H_
-# define _ARCH_X86_DEVICES_KEYBOARD_H_
+#ifndef _PLATFORM_PC_KEYBOARD_H_
+# define _PLATFORM_PC_KEYBOARD_H_
 
 # include <chaosdef.h>
 
 # define KEYBOARD_INT_HANDLER		0x01
 # define KEYBOARD_IO_PORT		0x60
 
-#endif /* !_ARCH_X86_DEVICES_KEYBOARD_H_ */
+#endif /* !_PLATFORM_PC_KEYBOARD_H_ */

@@ -7,8 +7,8 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _LINKER_H_
-# define _LINKER_H_
+#ifndef _KERNEL_LINKER_H_
+# define _KERNEL_LINKER_H_
 
 # include <chaosdef.h>
 
@@ -27,4 +27,4 @@ extern void *__KERNEL_PHYSICAL_END __weak;
 # define KERNEL_VIRTUAL_END	((void *)&__KERNEL_VIRTUAL_END)
 # define KERNEL_PHYSICAL_END	((void *)&__KERNEL_PHYSICAL_END)
 
-#endif /* !_LINKER_H_ */
+#endif /* !_KERNEL_LINKER_H_ */

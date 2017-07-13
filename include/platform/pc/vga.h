@@ -7,8 +7,8 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _ARCH_X86_DEVICES_VGA_H_
-# define _ARCH_X86_DEVICES_VGA_H_
+#ifndef _PLATFORM_PC_VGA_H_
+# define _PLATFORM_PC_VGA_H_
 
 # include <chaosdef.h>
 
@@ -46,4 +46,4 @@ struct			vga
 void			vga_set_color(enum VGA_COLOR, enum VGA_COLOR);
 void			vga_clear(void);
 
-#endif /* !_ARCH_X86_DEVICES_VGA_H_ */
+#endif /* !_PLATFORM_PC_VGA_H_ */

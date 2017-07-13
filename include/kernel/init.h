@@ -7,8 +7,8 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _INIT_H_
-# define _INIT_H_
+#ifndef _KERNEL_INIT_H_
+# define _KERNEL_INIT_H_
 
 # include <chaosdef.h>
 # include <limits.h>
@@ -44,4 +44,4 @@ struct	init_hook
 
 void	kernel_init_level(enum init_level, enum init_level);
 
-#endif /* !_INIT_H_ */
+#endif /* !_KERNEL_INIT_H_ */
