@@ -97,11 +97,11 @@ pmm_init(void)
 }
 
 /*
-** Some unit tests for the pmm.
+** Some unit tests for the frame allocator.
 **
 ** TODO Write a unit-test framework within the kernel,
 ** called using multiboot arguments, so that we can test all
-** of this throug Travis.
+** of this through Travis.
 */
 __used void
 pmm_unit_tests(void)
