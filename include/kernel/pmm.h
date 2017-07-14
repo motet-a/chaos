@@ -21,7 +21,7 @@ typedef uintptr			phys_addr_t;
 # define NULL_FRAME		(-1u)
 
 /* The number of frames */
-# define NB_FRAMES		(UINTPTR_MAX / PAGE_SIZE)
+# define NB_FRAMES		((UINTPTR_MAX / PAGE_SIZE) + 1)
 
 /* *The number of cells of the frame bitmap */
 # define FRAME_BITMAP_SIZE	(NB_FRAMES / 8u)
@@ -36,5 +36,7 @@ void				free_frame(phys_addr_t);
 
 /* Physical Memory Manager init */
 void				pmm_init(void);
+void				pmm_unit_tests(void);
+
 
 #endif /* !_KERNEL_PMM_H_ */

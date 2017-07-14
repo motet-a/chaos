@@ -12,10 +12,11 @@
 #include <stdio.h>
 
 static uchar				frame_bitmap[FRAME_BITMAP_SIZE];
+static size_t				next_frame;
 
 /*
 ** This is a pretty naive frame allocator using a bitmap to memorize which
-** frames are free and which one are not.
+** frames are free and which ones are not.
 **
 ** It can definitely be optimised, but that's not the point at this moment.
 */
@@ -23,28 +24,45 @@ static uchar				frame_bitmap[FRAME_BITMAP_SIZE];
 /*
 ** Allocates a new frame and returns it, or NULL_FRAME if there is no physical
 ** memory left.
+**
+** The idea is that next_frame contains the index in frame_bitmap of our first
+** looking address, the one most likely to be free.
+** The search is done in two steps, the first one from next_frame to NB_FRAMES, and
+** the second one from 0 to next_frame. If after these two steps no
+** free frame have been found, then NULL_FRAME is returned. However, if one have been found,
+** it also sets next_frame to the index of the following address.
 */
 phys_addr_t
 alloc_frame(void)
 {
 	size_t i;
 	size_t j;
+	size_t final;
+	bool pass;
 
-	i = 0;
-	while (i < NB_FRAMES)
+	i = next_frame;
+	final = FRAME_BITMAP_SIZE;
+	pass = false;
+look_for_address:
+	while (i < final)
 	{
 		if (frame_bitmap[i] != 0xFFu) {
 			j = 0u;
-			while (j < 7u) {
-				if ((frame_bitmap[i] & (1 << j)) == 0) {
-					break;
-				}
-				++i;
+			while (j < 7u && (frame_bitmap[i] & (1 << j)) != 0) {
+				++j;
 			}
 			frame_bitmap[i] |= (1 << j);
+			next_frame = i;
 			return (PAGE_SIZE * (i * 8u + j));
 		}
 		++i;
+	}
+	if (!pass)
+	{
+		final = next_frame;
+		i = 0;
+		pass = true;
+		goto look_for_address;
 	}
 	return (NULL_FRAME);
 }
@@ -63,11 +81,41 @@ free_frame(phys_addr_t frame)
 
 	/* Set the bit corresponding to this frame to 0 */
 	frame_bitmap[GET_FRAME_IDX(frame)] &= ~(GET_FRAME_MASK(frame));
+	next_frame = GET_FRAME_IDX(frame);
 }
 
+/*
+** Initializes the frame allocator.
+*/
 void
 pmm_init(void)
 {
+	next_frame = 0u;
 	memset(frame_bitmap, 0, sizeof(frame_bitmap));
+	pmm_unit_tests();
 	printf("[OK]\tPhysical Memory Managment\n");
+}
+
+__used void
+pmm_unit_tests(void)
+{
+	assert_eq(alloc_frame(), 0x0000);
+	assert_eq(alloc_frame(), 0x1000);
+	assert_eq(alloc_frame(), 0x2000);
+	free_frame(0x1000);
+	assert_eq(alloc_frame(), 0x1000);
+	free_frame(0x0000);
+	free_frame(0x1000);
+	free_frame(0x2000);
+	while (alloc_frame() != NULL_FRAME);
+	assert_eq(alloc_frame(), NULL_FRAME);
+	free_frame(1234 * 0x1000);
+	assert_eq(alloc_frame(), 1234 * 0x1000);
+	assert_eq(alloc_frame(), NULL_FRAME);
+	free_frame(0xfffff000);
+	assert_eq(alloc_frame(), 0xfffff000);
+	assert_eq(alloc_frame(), NULL_FRAME);
+	free_frame(0x0);
+	assert_eq(alloc_frame(), 0x0);
+	assert_eq(alloc_frame(), NULL_FRAME);
 }
