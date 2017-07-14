@@ -14,7 +14,7 @@ KERNEL		?= $(BUILD)/chaos.bin
 OBJS		= $(SRC_ASM:.asm=.o) $(SRC_C:.c=.o)
 arch		?= x86
 ARCH		= $(arch)
-PLATFORM	= $(shell ./scripts/get_platform.sh $(ARCH))
+PLATFORM	?= $(shell ./scripts/get_platform.sh $(ARCH))
 
 # C compilation
 CC		?= gcc

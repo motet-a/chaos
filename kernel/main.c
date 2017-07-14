@@ -8,6 +8,7 @@
 \* ------------------------------------------------------------------------ */
 
 #include <kernel/init.h>
+#include <kernel/pmm.h>
 #include <stdio.h>
 
 /*
@@ -17,6 +18,7 @@ int
 kernel_main()
 {
 	kernel_init_level(CHAOS_INIT_LEVEL_EARLIEST, CHAOS_INIT_LEVEL_LATEST);
-	printf("Welcome to ChaOS\n");
+	pmm_init();
+	printf("\nWelcome to ChaOS\n\n");
 	return (0);
 }

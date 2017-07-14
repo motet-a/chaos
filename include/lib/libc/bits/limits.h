@@ -13,4 +13,8 @@
 # define LONG_MAX	(0x7fffffffL)
 # define LLONG_MAX	(0x7fffffffffffffffLL)
 
+# define INTPTR_MIN	(INT_MIN)
+# define INTPTR_MAX	(INT_MAX)
+# define UINTPTR_MAX	(UINT_MAX)
+
 #endif /* !__LIBC_BITS_LIMITS_H_ */

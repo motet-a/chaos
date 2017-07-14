@@ -57,4 +57,7 @@ typedef uint32_t		uint32;
 typedef uint64_t		uint64;
 typedef uintptr_t		uintptr;
 
+/* Mask to test if an address is page-aligned */
+# define PAGE_SIZE_MASK		((PAGE_SIZE) - 1u)
+
 #endif /* !_CHAOS_DEF_H_ */
