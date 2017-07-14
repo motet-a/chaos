@@ -11,15 +11,15 @@
 #include <string.h>
 #include <stdio.h>
 
-static uchar				frame_bitmap[FRAME_BITMAP_SIZE];
-static size_t				next_frame;
-
 /*
 ** This is a pretty naive frame allocator using a bitmap to memorize which
 ** frames are free and which ones are not.
 **
 ** It can definitely be optimised, but that's not the point at this moment.
 */
+
+static uchar				frame_bitmap[FRAME_BITMAP_SIZE];
+static size_t				next_frame;
 
 /*
 ** Allocates a new frame and returns it, or NULL_FRAME if there is no physical
@@ -96,6 +96,13 @@ pmm_init(void)
 	printf("[OK]\tPhysical Memory Managment\n");
 }
 
+/*
+** Some unit tests for the pmm.
+**
+** TODO Write a unit-test framework within the kernel,
+** called using multiboot arguments, so that we can test all
+** of this throug Travis.
+*/
 __used void
 pmm_unit_tests(void)
 {

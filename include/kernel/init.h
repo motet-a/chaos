@@ -34,6 +34,8 @@ struct	init_hook
 	char const *name;
 };
 
+void	kernel_init_level(enum init_level, enum init_level);
+
 # define NEW_INIT_HOOK(n, h, l)						\
 	__aligned(sizeof(void*)) __used __section("chaos_init")		\
 	static const struct init_hook _init_hook_struct_##n = {		\
@@ -41,7 +43,5 @@ struct	init_hook
 		.hook = h,						\
 		.name = #n,						\
 	}
-
-void	kernel_init_level(enum init_level, enum init_level);
 
 #endif /* !_KERNEL_INIT_H_ */
