@@ -14,17 +14,17 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef struct {
+struct options {
 	bool test;
-} options_t;
+};
 
-static options_t options = {0};
+static struct options options = {0};
 
-static options_t
+static struct options
 parse_command_line(char const *string) {
 	printf("Multiboot command line: %s\n", string);
 
-	return (options_t){
+	return (struct options){
 		.test = strstr(string, "test"),
 	};
 }
