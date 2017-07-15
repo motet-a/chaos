@@ -20,10 +20,12 @@
 */
 void		panic(char const *fmt, ...) __noreturn;
 
+# define static_assert(e)	extern char (*__static_assert(void)) [sizeof(char[1 - 2 * !(e)])]
+
 /*
 ** The assert() macro will panic if the given expression results to false
 */
-# define	assert(expr)				\
+# define			assert(expr)		\
   if (!(expr)) {					\
     panic("assert(%s) failed (in %s at line %u).\n",	\
            #expr, __FILE__, __LINE__);			\
@@ -32,11 +34,11 @@ void		panic(char const *fmt, ...) __noreturn;
 /*
 ** The assert_eq() macro will panic if the given operands ARE NOT equal.
 */
-# define assert_eq(a, b) assert((a) == (b))
+# define assert_eq(a, b)	assert((a) == (b))
 
 /*
 ** The assert_neq() macro will panic if the given operands ARE equal.
 */
-# define assert_neq(a, b) assert((a) != (b))
+# define assert_neq(a, b)	assert((a) != (b))
 
 #endif /* !_CHAOS_DEBUG_H_ */
