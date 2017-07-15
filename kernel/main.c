@@ -10,24 +10,10 @@
 #include <kernel/init.h>
 #include <kernel/pmm.h>
 #include <kernel/vmm.h>
+#include <kernel/options.h>
 #include <multiboot2.h>
 #include <stdio.h>
 #include <string.h>
-
-struct options {
-	bool test;
-};
-
-static struct options options = {0};
-
-static struct options
-parse_command_line(char const *string) {
-	printf("Multiboot command line: %s\n", string);
-
-	return (struct options){
-		.test = strstr(string, "test"),
-	};
-}
 
 /*
 ** This should probably go elsewhere, here only for example purposes.
@@ -43,7 +29,7 @@ multiboot_load(uintptr mb_addr)
 		switch (tag->type)
 		{
 		case MULTIBOOT_TAG_TYPE_CMDLINE:
-			options = parse_command_line(((struct multiboot_tag_string *)tag)->string);
+			options_parse_command_line(((struct multiboot_tag_string *)tag)->string);
 			break;
 		}
 		tag = (struct multiboot_tag *)((uchar *)tag + ((tag->size + 7) & ~7));
@@ -82,7 +68,7 @@ kernel_main(uintptr mb_addr)
 
 	/* Drivers hooks would go there */
 
-	if (options.test) {
+	if (get_options().test) {
 		test();
 	}
 
