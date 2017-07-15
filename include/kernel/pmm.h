@@ -36,7 +36,7 @@ void				free_frame(phys_addr_t);
 
 /* Physical Memory Manager init */
 void				pmm_init(void);
-void				pmm_unit_tests(void);
+void				pmm_test(void);
 
 
 #endif /* !_KERNEL_PMM_H_ */

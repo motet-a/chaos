@@ -17,6 +17,7 @@
 */
 
 size_t		strlen(char const *) __pure;
+char		*strstr(char const *haystack, char const *needle) __pure;
 
 void		*memset(void *src, int c, size_t n);
 void		*memcpy(void *dest, void const *src, size_t n);

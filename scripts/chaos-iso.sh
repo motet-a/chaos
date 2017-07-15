@@ -15,6 +15,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$SCRIPT_DIR/../"
 BUILD_DIR="$PROJECT_DIR/build/"
 RULES=kernel
+boot_args=${CHAOS_BOOT_ARGS:-}
+echo $boot_args
 
 if [ ! -f "$BUILD_DIR/chaos.bin" ]; then
 	echo -e "  MAKE\t $RULES"
@@ -30,19 +32,22 @@ TEMP=$(mktemp -d)
 
 mkdir -p "$TEMP/boot/grub"
 cp "$BUILD_DIR/chaos.bin" "$TEMP/boot/chaos.bin"
-cat > "$TEMP/boot/grub/grub.cfg" << EOF
+grub_cfg="$TEMP/boot/grub/grub.cfg"
+cat > $grub_cfg << EOF
 set timeout=0
 
 menuentry "ChaOS" {
-	multiboot2 /boot/chaos.bin
-	boot
-}
 EOF
 
-GRUB_OUTPUT=$(mktemp)
-echo -e "  GRUB\t chaos.iso"
+echo "  multiboot2 /boot/chaos.bin ${boot_args}" >> $grub_cfg
+echo "}" >> $grub_cfg
 
-if ! grub-mkrescue -o "$PROJECT_DIR/chaos.iso" "$TEMP" &> "$GRUB_OUTPUT" ; then
+GRUB_OUTPUT=$(mktemp)
+output_iso_path="${PROJECT_DIR}/chaos.iso"
+
+echo -e "  GRUB\t ${output_iso_path}"
+
+if ! grub-mkrescue -o "$output_iso_path" "$TEMP" &> "$GRUB_OUTPUT" ; then
 	cat "$GRUB_OUTPUT"
 	exit 1
 fi

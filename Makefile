@@ -51,9 +51,11 @@ LD		?= ld
 LDFLAGS		+= -n --gc-sections -m elf_i386 -T arch/$(ARCH)/kernel.ld
 
 
-all:		$(KERNEL) $(ISO)
+all:		$(ISO)
 
 iso:		$(ISO)
+
+test:		test_iso monitor
 
 kernel:		$(KERNEL)
 
@@ -63,6 +65,10 @@ $(KERNEL):	$(OBJS)
 
 $(ISO):		$(KERNEL)
 		echo -e "  SHELL\t chaos-iso.sh"
+		./scripts/chaos-iso.sh
+
+test_iso:	export CHAOS_BOOT_ARGS=test
+test_iso:	$(KERNEL)
 		./scripts/chaos-iso.sh
 
 clean:

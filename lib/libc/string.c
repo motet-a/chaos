@@ -7,7 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <stddef.h>
+#include <string.h>
 
 size_t
 strlen(char const *str)
@@ -19,6 +19,22 @@ strlen(char const *str)
 		++s;
 	}
 	return ((size_t)(s - str));
+}
+
+static bool
+starts_with(char const *string, char const *prefix)
+{
+	return !*prefix ? true :
+		*string == *prefix ? starts_with(string + 1, prefix + 1) :
+		false;
+}
+
+char
+*strstr(char const *haystack, char const *needle)
+{
+	return starts_with(haystack, needle) ? (char *)haystack :
+		*haystack ? strstr(haystack + 1, needle) :
+		NULL;
 }
 
 void *
