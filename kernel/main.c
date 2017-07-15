@@ -10,13 +10,15 @@
 #include <kernel/init.h>
 #include <kernel/pmm.h>
 #include <kernel/vmm.h>
+#include <kernel/options.h>
 #include <multiboot2.h>
 #include <stdio.h>
+#include <string.h>
 
 /*
 ** This should probably go elsewhere, here only for example purposes.
 */
-void
+static void
 multiboot_load(uintptr mb_addr)
 {
 	struct multiboot_tag *tag;
@@ -27,11 +29,18 @@ multiboot_load(uintptr mb_addr)
 		switch (tag->type)
 		{
 		case MULTIBOOT_TAG_TYPE_CMDLINE:
-			printf("Command line: %s\n", ((struct multiboot_tag_string *)tag)->string);
+			options_parse_command_line(((struct multiboot_tag_string *)tag)->string);
 			break;
 		}
 		tag = (struct multiboot_tag *)((uchar *)tag + ((tag->size + 7) & ~7));
 	}
+}
+
+static void test() {
+	printf("Running tests...\n");
+	pmm_test();
+	string_test();
+	printf("Done.\n");
 }
 
 /*
@@ -59,7 +68,12 @@ kernel_main(uintptr mb_addr)
 
 	/* Drivers hooks would go there */
 
+	if (get_options().test) {
+		test();
+	}
+
 	/* We're now ready to go on */
 	printf("\nWelcome to ChaOS\n\n");
+
 	return (0);
 }

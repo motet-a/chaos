@@ -25,4 +25,4 @@ COPY Makefile /chaos/Makefile
 RUN make clean
 RUN CC=clang make kernel
 RUN make clean
-RUN make iso
+RUN make test_iso

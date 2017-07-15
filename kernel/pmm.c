@@ -92,7 +92,6 @@ pmm_init(void)
 {
 	next_frame = 0u;
 	memset(frame_bitmap, 0, sizeof(frame_bitmap));
-	pmm_unit_tests();
 	printf("[OK]\tPhysical Memory Managment\n");
 }
 
@@ -100,11 +99,10 @@ pmm_init(void)
 ** Some unit tests for the frame allocator.
 **
 ** TODO Write a unit-test framework within the kernel,
-** called using multiboot arguments, so that we can test all
-** of this through Travis.
+** so that we can test all of this through Travis.
 */
-__used void
-pmm_unit_tests(void)
+void
+pmm_test(void)
 {
 	assert_eq(alloc_frame(), 0x0000);
 	assert_eq(alloc_frame(), 0x1000);
