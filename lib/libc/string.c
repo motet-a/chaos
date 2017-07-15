@@ -24,17 +24,61 @@ strlen(char const *str)
 static bool
 starts_with(char const *string, char const *prefix)
 {
-	return !*prefix ? true :
-		*string == *prefix ? starts_with(string + 1, prefix + 1) :
-		false;
+	while (*string && *string == *prefix) {
+		++string;
+		++prefix;
+	}
+	return (!*prefix);
+}
+
+static void
+starts_with_test(void)
+{
+	assert(starts_with("", ""));
+	assert(!starts_with("", "a"));
+	assert(starts_with("a", ""));
+	assert(starts_with("a", "a"));
+	assert(starts_with("boat", "boa"));
+	assert(starts_with("boat", "boat"));
+	assert(!starts_with(" boat", "boat"));
 }
 
 char
 *strstr(char const *haystack, char const *needle)
 {
-	return starts_with(haystack, needle) ? (char *)haystack :
-		*haystack ? strstr(haystack + 1, needle) :
-		NULL;
+	while (true) {
+		if (starts_with(haystack, needle)) {
+			return (char *)haystack;
+		}
+		if (!*haystack) {
+			return (NULL);
+		}
+		++haystack;
+	}
+}
+
+static ptrdiff_t
+strstr_index(char const *haystack, char const *needle)
+{
+	char const *result = strstr(haystack, needle);
+	if (!result) {
+		return (-1);
+	}
+	assert(result >= haystack);
+	if (strlen(haystack)) {
+		assert(result < haystack + strlen(haystack));
+	}
+	return (result - haystack);
+}
+
+static void
+strstr_test(void)
+{
+	assert(strstr_index("", "") == 0);
+	assert(strstr_index("a", "") == 0);
+	assert(strstr_index("a", "a") == 0);
+	assert(strstr_index("ba", "a") == 1);
+	assert(strstr_index("", "a") == -1);
 }
 
 void *
@@ -121,4 +165,11 @@ memchr(void const *src, int c, size_t n)
 		--n;
 	}
 	return (NULL);
+}
+
+void
+string_test(void)
+{
+	starts_with_test();
+	strstr_test();
 }

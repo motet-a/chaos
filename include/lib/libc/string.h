@@ -25,4 +25,6 @@ int		memcmp(void const *s1, void const *s2, size_t n) __pure;
 void		*memchr(void const *src, int c, size_t n) __pure;
 void 		*memmove(void *dest, void const *src, size_t n);
 
+void		string_test(void);
+
 #endif /* !_LIBC_STRING_H_ */

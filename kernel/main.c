@@ -22,15 +22,11 @@ static options_t options = {0};
 
 static options_t
 parse_command_line(char const *string) {
-	options_t options = {0};
-
 	printf("Multiboot command line: %s\n", string);
 
-	if (strstr(string, "test")) {
-		options.test = true;
-	}
-
-	return options;
+	return (options_t){
+		.test = strstr(string, "test"),
+	};
 }
 
 /*
@@ -57,6 +53,7 @@ multiboot_load(uintptr mb_addr)
 static void test() {
 	printf("Running tests...\n");
 	pmm_test();
+	string_test();
 	printf("Done.\n");
 }
 
