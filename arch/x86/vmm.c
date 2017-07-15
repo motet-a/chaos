@@ -7,12 +7,10 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _KERNEL_VMM_H_
-# define _KERNEL_VMM_H_
+#include <arch/x86/vmm.h>
+#include <stdio.h>
 
-# include <chaosdef.h>
-
-void			arch_vmm_init(void);
-void			vmm_init(void);
-
-#endif /* !_KERNEL_VMM_H_ */
+void
+arch_vmm_init(void)
+{
+}

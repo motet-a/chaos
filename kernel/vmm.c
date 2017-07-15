@@ -10,8 +10,21 @@
 #include <kernel/vmm.h>
 #include <stdio.h>
 
+/*
+** Initialises the arch-dependent stuff of virtual memory management.
+**
+** Weak symbol, should be re-implemented on each architecture.
+*/
+__weak void
+arch_vmm_init(void)
+{}
+
+/*
+** Initalises the arch-independant stuff of virtual memory management.
+*/
 void
 vmm_init(void)
 {
+	arch_vmm_init();
 	printf("[OK]\tVirtual Memory Management\n");
 }
