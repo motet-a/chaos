@@ -11,8 +11,12 @@
 # define _KERNEL_VMM_H_
 
 # include <chaosdef.h>
+# include <chaoserr.h>
+# include <kernel/pmm.h>
 
-void			arch_vmm_init(void);
+typedef void 		*virt_addr_t;
+
+status_t		arch_map_virt_to_phys();
 void			vmm_init(void);
 
 #endif /* !_KERNEL_VMM_H_ */

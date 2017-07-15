@@ -62,7 +62,26 @@ struct			pagetable_entry
 	};
 };
 
+/*
+** A page table.
+** It's composed of 1024 entries.
+*/
+struct			page_table
+{
+	struct pagetable_entry entries[PAGE_SIZE / sizeof(struct pagetable_entry)];
+};
+
+/*
+** A page directory.
+*/
+struct			page_directory
+{
+	struct pagedir_entry entries[PAGE_SIZE / sizeof(struct pagedir_entry)];
+};
+
 static_assert(sizeof(struct pagedir_entry) == sizeof(uintptr));
 static_assert(sizeof(struct pagetable_entry) == sizeof(uintptr));
+static_assert(sizeof(struct page_table) == PAGE_SIZE);
+static_assert(sizeof(struct page_directory) == PAGE_SIZE);
 
 #endif /* !_ARCH_X86_VMM_H_ */
