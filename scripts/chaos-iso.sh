@@ -16,7 +16,6 @@ PROJECT_DIR="$SCRIPT_DIR/../"
 BUILD_DIR="$PROJECT_DIR/build/"
 RULES=kernel
 boot_args=${CHAOS_BOOT_ARGS:-}
-echo $boot_args
 
 if [ ! -f "$BUILD_DIR/chaos.bin" ]; then
 	echo -e "  MAKE\t $RULES"
