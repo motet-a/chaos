@@ -7,20 +7,23 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <kernel/init.h>
+#include <kernel/pmm.h>
 #include <kernel/options.h>
-#include <string.h>
 #include <stdio.h>
 
-static struct options options;
+extern void string_test(void);
 
-void
-options_parse_command_line(char const *string)
+static void
+unit_tests()
 {
-	options.unit_test = strstr(string, "--unit-test") != NULL;
+	if (options_is_unit_tests_enabled())
+	{
+		printf("[..]\tRunning tests...");
+		pmm_test();
+		string_test();
+		printf("\r[OK]\tRunnning tests... Done!\n");
+	}
 }
 
-bool
-options_is_unit_tests_enabled(void)
-{
-	return (options.unit_test);
-}
+NEW_INIT_HOOK(unit_tests, &unit_tests, CHAOS_INIT_LEVEL_LATEST);

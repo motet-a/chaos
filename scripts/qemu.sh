@@ -55,6 +55,12 @@ esac
 
 ISO="$PROJECT_DIR/chaos.iso"
 
+if [ ! -f "$ISO" ]; then
+	RULES="chaos.iso"
+	echo -e "  MAKE\t $RULES"
+	make -C "$PROJECT_DIR" --no-print-directory $RULES
+fi
+
 ARGS="-m $MEMORY -cdrom $ISO"
 
 if [ $DEBUG == 1 ]; then
@@ -65,12 +71,6 @@ if [ $MONITOR == 1 ]; then
 	ARGS+=" -monitor stdio"
 else
 	ARGS+=" -serial stdio"
-fi
-
-if [ ! -f "$ISO" ]; then
-	RULES="chaos.iso"
-	echo -e "  MAKE\t $RULES"
-	make -C "$PROJECT_DIR" --no-print-directory $RULES
 fi
 
 if ! which "$QEMU" &> /dev/null; then

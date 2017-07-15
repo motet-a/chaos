@@ -7,6 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <kernel/init.h>
 #include <kernel/pmm.h>
 #include <string.h>
 #include <stdio.h>
@@ -87,8 +88,8 @@ free_frame(phys_addr_t frame)
 /*
 ** Initializes the frame allocator.
 */
-void
-pmm_init(void)
+static void
+pmm_init(enum init_level il __unused)
 {
 	next_frame = 0u;
 	memset(frame_bitmap, 0, sizeof(frame_bitmap));
@@ -124,3 +125,5 @@ pmm_test(void)
 	assert_eq(alloc_frame(), 0x0);
 	assert_eq(alloc_frame(), NULL_FRAME);
 }
+
+NEW_INIT_HOOK(pmm, &pmm_init, CHAOS_INIT_LEVEL_PMM);

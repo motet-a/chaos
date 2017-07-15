@@ -23,6 +23,6 @@ COPY scripts /chaos/scripts
 COPY Makefile /chaos/Makefile
 
 RUN make clean
-RUN CC=clang make kernel
+RUN CC=clang make boot_flags="--unit-tests" kernel
 RUN make clean
-RUN make test_iso
+RUN make boot_flags="--unit-test" iso

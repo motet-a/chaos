@@ -11,11 +11,28 @@
 
 set -e -u
 
+function print_usage {
+	echo -e "Usage: $0 [OPTIONS]"
+	echo -e "\t-b <boot_flags>		Set some addition flags to give to the kernel."
+	exit 1
+}
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$SCRIPT_DIR/../"
 BUILD_DIR="$PROJECT_DIR/build/"
+BOOT_ARGS=""
 RULES=kernel
-boot_args=${CHAOS_BOOT_ARGS:-}
+OUTPUT=chaos.iso
+
+while getopts b: FLAG; do
+	case $FLAG in
+		b)
+			BOOT_ARGS="$OPTARG";;
+		*)
+			echo -e "Unknown option"
+			print_usage
+	esac
+done
 
 if [ ! -f "$BUILD_DIR/chaos.bin" ]; then
 	echo -e "  MAKE\t $RULES"
@@ -31,22 +48,21 @@ TEMP=$(mktemp -d)
 
 mkdir -p "$TEMP/boot/grub"
 cp "$BUILD_DIR/chaos.bin" "$TEMP/boot/chaos.bin"
-grub_cfg="$TEMP/boot/grub/grub.cfg"
-cat > $grub_cfg << EOF
+
+cat > "$TEMP/boot/grub/grub.cfg" << EOF
 set timeout=0
 
 menuentry "ChaOS" {
+  multiboot2 /boot/chaos.bin ${BOOT_ARGS}
+}
 EOF
-
-echo "  multiboot2 /boot/chaos.bin ${boot_args}" >> $grub_cfg
-echo "}" >> $grub_cfg
 
 GRUB_OUTPUT=$(mktemp)
 output_iso_path="${PROJECT_DIR}/chaos.iso"
 
-echo -e "  GRUB\t ${output_iso_path}"
+echo -e "  GRUB\t chaos.iso"
 
-if ! grub-mkrescue -o "$output_iso_path" "$TEMP" &> "$GRUB_OUTPUT" ; then
+if ! grub-mkrescue -o "$PROJECT_DIR/chaos.iso" "$TEMP" &> "$GRUB_OUTPUT" ; then
 	cat "$GRUB_OUTPUT"
 	exit 1
 fi

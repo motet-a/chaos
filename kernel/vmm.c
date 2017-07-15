@@ -7,6 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <kernel/init.h>
 #include <kernel/vmm.h>
 #include <stdio.h>
 
@@ -45,9 +46,11 @@ arch_unmap_vaddress(virt_addr_t va __unused)
 ** Initalises the arch-independant stuff of virtual memory management.
 ** Calls the arch-dependent vmm init function.
 */
-void
-vmm_init(void)
+static void
+vmm_init(enum init_level il __unused)
 {
 	arch_vmm_init();
 	printf("[OK]\tVirtual Memory Management\n");
 }
+
+NEW_INIT_HOOK(vmm, &vmm_init, CHAOS_INIT_LEVEL_VMM);

@@ -12,11 +12,12 @@
 
 #include <stdbool.h>
 
-struct options {
-	bool test;
+struct options
+{
+	bool unit_test;
 };
 
 void		options_parse_command_line(char const *string);
-struct options	get_options(void);
+bool		options_is_unit_tests_enabled(void);
 
 #endif /* !_KERNEL_OPTIONS_H_ */

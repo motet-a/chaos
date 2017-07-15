@@ -16,31 +16,29 @@
 #include <string.h>
 
 /*
-** This should probably go elsewhere, here only for example purposes.
+** Goes through the multiboot structure, printing and evaluating it's content.
+**
+** TODO: Put this in a multiboot.c compilation  unit.
 */
 static void
 multiboot_load(uintptr mb_addr)
 {
 	struct multiboot_tag *tag;
 
+	printf("Multiboot\n");
 	tag = (struct multiboot_tag *)(mb_addr + 8);
 	while (tag->type != MULTIBOOT_TAG_TYPE_END)
 	{
 		switch (tag->type)
 		{
 		case MULTIBOOT_TAG_TYPE_CMDLINE:
+			printf("\tArguments: [%s]\n", ((struct multiboot_tag_string *)tag)->string);
 			options_parse_command_line(((struct multiboot_tag_string *)tag)->string);
 			break;
 		}
 		tag = (struct multiboot_tag *)((uchar *)tag + ((tag->size + 7) & ~7));
 	}
-}
-
-static void test() {
-	printf("Running tests...\n");
-	pmm_test();
-	string_test();
-	printf("Done.\n");
+	printf("\n");
 }
 
 /*
@@ -54,23 +52,20 @@ kernel_main(uintptr mb_addr)
 
 	/* Then goes early arch and platform stuff */
 	kernel_init_level(CHAOS_INIT_LEVEL_ARCH_EARLY, CHAOS_INIT_LEVEL_PLATFORM_EARLY - 1);
-	kernel_init_level(CHAOS_INIT_LEVEL_PLATFORM_EARLY, CHAOS_INIT_LEVEL_ARCH - 1);
+	kernel_init_level(CHAOS_INIT_LEVEL_PLATFORM_EARLY, CHAOS_INIT_LEVEL_PMM - 1);
 
+	/* Load the multiboot structure */
 	multiboot_load(mb_addr);
 
 	/* Initialize the memory management */
-	pmm_init();
-	vmm_init();
+	kernel_init_level(CHAOS_INIT_LEVEL_PMM, CHAOS_INIT_LEVEL_VMM - 1);
+	kernel_init_level(CHAOS_INIT_LEVEL_VMM, CHAOS_INIT_LEVEL_ARCH - 1);
 
 	/* It's time to initialize arch and platform */
 	kernel_init_level(CHAOS_INIT_LEVEL_ARCH, CHAOS_INIT_LEVEL_PLATFORM - 1);
 	kernel_init_level(CHAOS_INIT_LEVEL_PLATFORM, CHAOS_INIT_LEVEL_LATEST);
 
 	/* Drivers hooks would go there */
-
-	if (get_options().test) {
-		test();
-	}
 
 	/* We're now ready to go on */
 	printf("\nWelcome to ChaOS\n\n");

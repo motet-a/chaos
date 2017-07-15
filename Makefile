@@ -15,6 +15,8 @@ OBJS		= $(SRC_ASM:.asm=.o) $(SRC_C:.c=.o)
 arch		?= x86
 ARCH		= $(arch)
 PLATFORM	?= $(shell ./scripts/get_platform.sh $(ARCH))
+boot_flags	?=
+BOOT_FLAGS	= $(boot_flags)
 
 # C compilation
 CC		?= gcc
@@ -55,8 +57,6 @@ all:		$(ISO)
 
 iso:		$(ISO)
 
-test:		test_iso monitor
-
 kernel:		$(KERNEL)
 
 $(KERNEL):	$(OBJS)
@@ -64,12 +64,8 @@ $(KERNEL):	$(OBJS)
 		$(LD) $(LDFLAGS) -o $@ $+ && echo -e "  LD\t $@"
 
 $(ISO):		$(KERNEL)
-		echo -e "  SHELL\t chaos-iso.sh"
-		./scripts/chaos-iso.sh
-
-test_iso:	export CHAOS_BOOT_ARGS=test
-test_iso:	$(KERNEL)
-		./scripts/chaos-iso.sh
+		echo -e "  SHELL\t chaos-iso.sh $(BOOT_FLAGS)"
+		./scripts/chaos-iso.sh -b "$(BOOT_FLAGS)"
 
 clean:
 		$(RM) $(OBJS)
@@ -84,11 +80,11 @@ run:		$(ISO)
 		echo -e "  SHELL\t qemu.sh"
 		./scripts/qemu.sh -m 1G -a $(ARCH)
 
-monitor:	all
+monitor:	$(ISO)
 		echo -e "  SHELL\t qemu.sh"
 		./scripts/qemu.sh -t -m 1G -a $(ARCH)
 
-debug:		all
+debug:		$(ISO)
 		echo -e "  SHELL\t qemu.sh"
 		./scripts/qemu.sh -d -m 1G -a $(ARCH)
 
