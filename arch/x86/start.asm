@@ -8,6 +8,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 global start:function
+global multiboot_info
 
 extern gdtptr_phys
 extern gdtptr
@@ -26,7 +27,8 @@ start:
 
 	; load a temporary kernel stack using a physical pointer
 	mov esp, PHYS(kernel_stack_top)
-
+        add ebx, KERNEL_VIRTUAL_BASE
+        mov [multiboot_info], ebx
 	jmp .common_protected
 
 .common_protected:
@@ -95,6 +97,10 @@ boot_page_directory:
 	times (1024 - KERNEL_PAGE_INDEX - 2) dd 0
 	.last_entry:			; Used for recurse mapping
 	dd 0
+
+multiboot_info:
+        dw 0
+        dw 0
 
 ; Boot Kernel stack
 section .bss

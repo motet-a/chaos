@@ -11,6 +11,12 @@
 #include <kernel/pmm.h>
 #include <stdio.h>
 
+typedef struct {
+	uint32 total_size;
+} multiboot_info_t;
+
+extern const multiboot_info_t *multiboot_info;
+
 /*
 ** Common entry point of the kernel.
 */
@@ -35,5 +41,6 @@ kernel_main()
 
 	/* We're now ready to go on */
 	printf("\nWelcome to ChaOS\n\n");
+	printf("mbi %p\n", multiboot_info);
 	return (0);
 }
