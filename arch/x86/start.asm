@@ -77,6 +77,9 @@ start:
 	mov eax, cr3
 	mov cr3, eax			; Reload page directory and update the TLB cache
 
+	add ebx, KERNEL_VIRTUAL_BASE
+	push ebx
+
 	call idt_setup			; setup the Interrupt Descriptor Table
 
 	call kernel_main

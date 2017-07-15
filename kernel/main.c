@@ -9,13 +9,36 @@
 
 #include <kernel/init.h>
 #include <kernel/pmm.h>
+#include <kernel/vmm.h>
+#include <multiboot2.h>
 #include <stdio.h>
+
+/*
+** This should probably go elsewhere, here only for example purposes.
+*/
+void
+multiboot_load(uintptr mb_addr)
+{
+	struct multiboot_tag *tag;
+
+	tag = (struct multiboot_tag *)(mb_addr + 8);
+	while (tag->type != MULTIBOOT_TAG_TYPE_END)
+	{
+		switch (tag->type)
+		{
+		case MULTIBOOT_TAG_TYPE_CMDLINE:
+			printf("Command line: %s\n", ((struct multiboot_tag_string *)tag)->string);
+			break;
+		}
+		tag = (struct multiboot_tag *)((uchar *)tag + ((tag->size + 7) & ~7));
+	}
+}
 
 /*
 ** Common entry point of the kernel.
 */
 int
-kernel_main()
+kernel_main(uintptr mb_addr)
 {
 	/* Super super early hooks goes first. */
 	kernel_init_level(CHAOS_INIT_LEVEL_EARLIEST, CHAOS_INIT_LEVEL_ARCH_EARLY - 1);
@@ -24,8 +47,11 @@ kernel_main()
 	kernel_init_level(CHAOS_INIT_LEVEL_ARCH_EARLY, CHAOS_INIT_LEVEL_PLATFORM_EARLY - 1);
 	kernel_init_level(CHAOS_INIT_LEVEL_PLATFORM_EARLY, CHAOS_INIT_LEVEL_ARCH - 1);
 
+	multiboot_load(mb_addr);
+
 	/* Initialize the memory management */
 	pmm_init();
+	vmm_init();
 
 	/* It's time to initialize arch and platform */
 	kernel_init_level(CHAOS_INIT_LEVEL_ARCH, CHAOS_INIT_LEVEL_PLATFORM - 1);
