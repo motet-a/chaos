@@ -93,7 +93,9 @@ struct		idt_entry
 	uint8 __zero; /* Must be zero */
 	uint8 flags;
 	uint16 callback_high;
-} __packed;
+};
+
+static_assert(sizeof(struct idt_entry) == 2 * sizeof(uint32));
 
 typedef void (*x86_int_handler)(struct regs *);
 

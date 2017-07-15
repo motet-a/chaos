@@ -57,9 +57,12 @@ struct			pagetable_entry
 			uint32 global : 1;	/* Prevent tlb update */
 			uint32 __unusued : 3;	/* unused & reserved bits */
 			uint32 frame : 20;	/* Frame address */
-		} __packed;
+		};
 		uintptr value;
 	};
 };
+
+static_assert(sizeof(struct pagedir_entry) == sizeof(uintptr));
+static_assert(sizeof(struct pagetable_entry) == sizeof(uintptr));
 
 #endif /* !_ARCH_X86_VMM_H_ */

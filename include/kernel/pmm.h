@@ -38,5 +38,4 @@ void				free_frame(phys_addr_t);
 void				pmm_init(void);
 void				pmm_unit_tests(void);
 
-
 #endif /* !_KERNEL_PMM_H_ */
