@@ -21,64 +21,59 @@ strlen(char const *str)
 	return ((size_t)(s - str));
 }
 
-static bool
-starts_with(char const *string, char const *prefix)
+int
+strcmp(char const *s1, char const *s2)
 {
-	while (*string && *string == *prefix) {
-		++string;
-		++prefix;
+	while (*s1 == *s2)
+	{
+		if (*s1 == '\0') {
+			return (0);
+		}
+		++s1;
+		++s2;
 	}
-	return (!*prefix);
+	return (*s1 - *s2);
 }
 
-static void
-starts_with_test(void)
+int
+strncmp(char const *s1, char const *s2, size_t n)
 {
-	assert(starts_with("", ""));
-	assert(!starts_with("", "a"));
-	assert(starts_with("a", ""));
-	assert(starts_with("a", "a"));
-	assert(starts_with("boat", "boa"));
-	assert(starts_with("boat", "boat"));
-	assert(!starts_with(" boat", "boat"));
+	while (n)
+	{
+		if (*s1 != *s2 || *s1 == '\0')
+			return (*s1 - *s2);
+		++s1;
+		++s2;
+		--n;
+	}
+	return (0);
 }
 
 char
 *strstr(char const *haystack, char const *needle)
 {
-	while (true) {
-		if (starts_with(haystack, needle)) {
-			return (char *)haystack;
-		}
-		if (!*haystack) {
-			return (NULL);
-		}
-		++haystack;
-	}
-}
+	size_t len;
+	char sc;
+	char c;
 
-static ptrdiff_t
-strstr_index(char const *haystack, char const *needle)
-{
-	char const *result = strstr(haystack, needle);
-	if (!result) {
-		return (-1);
+	c = *needle++;
+	len = strlen(needle);
+	if (c == '\0') {
+		return ((char *)haystack);
 	}
-	assert(result >= haystack);
-	if (strlen(haystack)) {
-		assert(result < haystack + strlen(haystack));
+	do
+	{
+		do
+		{
+			sc = *haystack++;
+			if (sc == '\0') {
+				return (NULL);
+			}
+		}
+		while (sc != c);
 	}
-	return (result - haystack);
-}
-
-static void
-strstr_test(void)
-{
-	assert(strstr_index("", "") == 0);
-	assert(strstr_index("a", "") == 0);
-	assert(strstr_index("a", "a") == 0);
-	assert(strstr_index("ba", "a") == 1);
-	assert(strstr_index("", "a") == -1);
+	while (strncmp(haystack, needle, len) != 0);
+	return ((char *)haystack - 1);
 }
 
 void *
@@ -165,11 +160,4 @@ memchr(void const *src, int c, size_t n)
 		--n;
 	}
 	return (NULL);
-}
-
-void
-string_test(void)
-{
-	starts_with_test();
-	strstr_test();
 }

@@ -41,4 +41,14 @@ void		panic(char const *fmt, ...) __noreturn;
 */
 # define assert_neq(a, b)	assert((a) != (b))
 
+/*
+** The assert_lo() macro will panic if the first operand is greater than the other.
+*/
+# define assert_lo(a, b)	assert((a) < (b))
+
+/*
+** The assert_gr() macro will panic if the first operand is lower than the other.
+*/
+# define assert_gr(a, b)	assert((a) > (b))
+
 #endif /* !_CHAOS_DEBUG_H_ */

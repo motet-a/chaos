@@ -9,6 +9,7 @@
 
 #include <kernel/init.h>
 #include <kernel/pmm.h>
+#include <kernel/unit-tests.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -102,7 +103,7 @@ pmm_init(enum init_level il __unused)
 ** TODO Write a unit-test framework within the kernel,
 ** so that we can test all of this through Travis.
 */
-void
+static void
 pmm_test(void)
 {
 	assert_eq(alloc_frame(), 0x0000);
@@ -127,3 +128,4 @@ pmm_test(void)
 }
 
 NEW_INIT_HOOK(pmm, &pmm_init, CHAOS_INIT_LEVEL_PMM);
+NEW_UNIT_TEST(pmm, &pmm_test, UNIT_TEST_LEVEL_MEMORY);
