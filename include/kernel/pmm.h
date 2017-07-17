@@ -33,5 +33,7 @@ typedef uintptr			phys_addr_t;
 /* Physical allocation functions */
 phys_addr_t			alloc_frame(void);
 void				free_frame(phys_addr_t);
+bool				is_frame_allocated(phys_addr_t frame);
+void				mark_frame_as_allocated(phys_addr_t frame);
 
 #endif /* !_KERNEL_PMM_H_ */

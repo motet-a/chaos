@@ -87,13 +87,45 @@ free_frame(phys_addr_t frame)
 }
 
 /*
+** Returns true if the given address is taken.
+*/
+bool
+is_frame_allocated(phys_addr_t frame)
+{
+	assert(IS_PAGE_ALIGNED(frame));
+	return (frame_bitmap[GET_FRAME_IDX(frame)] & (GET_FRAME_MASK(frame)));
+}
+
+/*
+** Mark a frame as allocated.
+**
+** This shall be called before any allocation, or the given frame may have
+** been allocated. You can check with 'is_frame_allocated()'
+*/
+void
+mark_frame_as_allocated(phys_addr_t frame)
+{
+	assert(IS_PAGE_ALIGNED(frame));
+	frame_bitmap[GET_FRAME_IDX(frame)] |= GET_FRAME_MASK(frame);
+}
+
+/*
+** Reset the Physical Memory Manager
+*/
+static void
+pmm_reset(void)
+{
+	next_frame = 0u;
+	memset(frame_bitmap, 0, sizeof(frame_bitmap));
+}
+
+/*
 ** Initializes the frame allocator.
 */
 static void
 pmm_init(enum init_level il __unused)
 {
-	next_frame = 0u;
-	memset(frame_bitmap, 0, sizeof(frame_bitmap));
+	pmm_reset();
 	printf("[OK]\tPhysical Memory Managment\n");
 }
 
@@ -106,9 +138,19 @@ pmm_init(enum init_level il __unused)
 static void
 pmm_test(void)
 {
+	assert(!is_frame_allocated(0xfffff000));
+	mark_frame_as_allocated(0xfffff000);
+	assert(is_frame_allocated(0xfffff000));
+	free_frame(0xfffff000);
+	assert(!is_frame_allocated(0xfffff000));
+	next_frame = 0;
+
+	assert(!is_frame_allocated(0x0));
 	assert_eq(alloc_frame(), 0x0000);
 	assert_eq(alloc_frame(), 0x1000);
 	assert_eq(alloc_frame(), 0x2000);
+	assert(is_frame_allocated(0x0));
+	assert(!is_frame_allocated(0xfffff000));
 	free_frame(0x1000);
 	assert_eq(alloc_frame(), 0x1000);
 	free_frame(0x0000);
@@ -125,6 +167,11 @@ pmm_test(void)
 	free_frame(0x0);
 	assert_eq(alloc_frame(), 0x0);
 	assert_eq(alloc_frame(), NULL_FRAME);
+	assert(is_frame_allocated(0x0));
+	assert(is_frame_allocated(0xfffff000));
+
+	/* Reset PMM */
+	pmm_reset();
 }
 
 NEW_INIT_HOOK(pmm, &pmm_init, CHAOS_INIT_LEVEL_PMM);
