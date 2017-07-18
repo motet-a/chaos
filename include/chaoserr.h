@@ -45,6 +45,9 @@ enum				status
 
 	/* Input / output errors */
 	ERR_IO,				/* I/O error */
+
+	/* Mapping errors */
+	ERR_ALREADY_MAPPED,
 };
 
 typedef enum status	status_t;

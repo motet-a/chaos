@@ -39,10 +39,24 @@ inb(ushort port)
 	return (data);
 }
 
+static inline uintptr
+get_cr2(void)
+{
+	uintptr cr2;
+	asm volatile("mov %%cr2, %0" : "=r"(cr2));
+	return (cr2);
+}
+
 static inline void
 interrupt(uchar i)
 {
 	asm volatile("int %0" :: "i" (i));
+}
+
+static inline void
+invlpg(void *va)
+{
+	asm volatile("invlpg (%0)" ::"r" (va) : "memory");
 }
 
 #endif /* !_ARCH_X86_ASM_H_ */

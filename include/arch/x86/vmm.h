@@ -13,6 +13,12 @@
 # include <kernel/vmm.h>
 # include <chaosdef.h>
 
+/* Address of the page directory */
+# define GET_PAGE_DIRECTORY	((struct page_dir *)(0xFFFFF000ul))
+# define GET_PAGE_TABLE(x)	((struct page_table *)(0xFFC00000ul | (((x) & 0x3FF) << 12u)))
+# define GET_PD_IDX(x)		((uintptr)(x) >> 22u)
+# define GET_PT_IDX(x)		(((uintptr)(x) >> 12u) & 0x3FF)
+
 /*
 ** An entry in the page directory
 */
@@ -73,8 +79,9 @@ struct			page_table
 
 /*
 ** A page directory.
+** It's composed of 1024 entries.
 */
-struct			page_directory
+struct			page_dir
 {
 	struct pagedir_entry entries[PAGE_SIZE / sizeof(struct pagedir_entry)];
 };
@@ -82,6 +89,6 @@ struct			page_directory
 static_assert(sizeof(struct pagedir_entry) == sizeof(uintptr));
 static_assert(sizeof(struct pagetable_entry) == sizeof(uintptr));
 static_assert(sizeof(struct page_table) == PAGE_SIZE);
-static_assert(sizeof(struct page_directory) == PAGE_SIZE);
+static_assert(sizeof(struct page_dir) == PAGE_SIZE);
 
 #endif /* !_ARCH_X86_VMM_H_ */

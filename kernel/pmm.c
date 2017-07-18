@@ -110,6 +110,26 @@ mark_frame_as_allocated(phys_addr_t frame)
 }
 
 /*
+** Mark a range of frames as allocated
+**
+** This shall be called before any allocation, or the given frame may have
+** been allocated. You can check with 'is_frame_allocated()'
+*/
+void
+mark_range_as_allocated(phys_addr_t start, phys_addr_t end)
+{
+	assert(IS_PAGE_ALIGNED(start));
+	assert(IS_PAGE_ALIGNED(end));
+
+	while (start <= end)
+	{
+		frame_bitmap[GET_FRAME_IDX(start)] |= GET_FRAME_MASK(start);
+		start += PAGE_SIZE;
+	}
+	next_frame = end;
+}
+
+/*
 ** Reset the Physical Memory Manager
 */
 static void
@@ -117,6 +137,7 @@ pmm_reset(void)
 {
 	next_frame = 0u;
 	memset(frame_bitmap, 0, sizeof(frame_bitmap));
+	mark_range_as_allocated(0, (KERNEL_PHYSICAL_END & ~PAGE_SIZE_MASK) + PAGE_SIZE);
 }
 
 /*
@@ -126,7 +147,7 @@ static void
 pmm_init(enum init_level il __unused)
 {
 	pmm_reset();
-	printf("[OK]\tPhysical Memory Managment\n");
+	printf("[OK]\tPhysical Memory Managment (%#p)\n", next_frame);
 }
 
 /*
@@ -138,6 +159,16 @@ pmm_init(enum init_level il __unused)
 static void
 pmm_test(void)
 {
+	phys_addr_t pa;
+
+	pa = 0;
+	/* Reverse init to avoid conflicts */
+	while (pa <= (KERNEL_PHYSICAL_END & ~PAGE_SIZE_MASK) + PAGE_SIZE)
+	{
+		free_frame(pa);
+		pa += PAGE_SIZE;
+	}
+
 	assert(!is_frame_allocated(0xfffff000));
 	mark_frame_as_allocated(0xfffff000);
 	assert(is_frame_allocated(0xfffff000));

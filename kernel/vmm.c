@@ -7,6 +7,14 @@
 **
 \* ------------------------------------------------------------------------ */
 
+/*
+** Architecture independant virtual memory management.
+**
+** TODO:
+**	- Support arch-independant flags for page entries
+**	- Support pages of different size.
+*/
+
 #include <kernel/init.h>
 #include <kernel/unit-tests.h>
 #include <kernel/vmm.h>
@@ -76,10 +84,10 @@ vmm_init(enum init_level il __unused)
 	printf("[OK]\tVirtual Memory Management\n");
 }
 
-static void
+__weak void
 vmm_test(void)
 {
 }
 
 NEW_INIT_HOOK(vmm, &vmm_init, CHAOS_INIT_LEVEL_VMM);
-NEW_UNIT_TEST(vmm, &vmm_test, UNIT_TEST_LEVEL_MEMORY + 1);
+NEW_UNIT_TEST(vmm, &vmm_test, UNIT_TEST_LEVEL_MEMORY);
