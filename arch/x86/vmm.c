@@ -13,7 +13,7 @@
 #include <string.h>
 
 status_t
-arch_map_virt_to_phys(virt_addr_t va, phys_addr_t pa)
+map_virt_to_phys(virt_addr_t va, phys_addr_t pa)
 {
 	struct pagedir_entry *pde;
 	struct pagetable_entry *pte;
@@ -43,7 +43,7 @@ arch_map_virt_to_phys(virt_addr_t va, phys_addr_t pa)
 	if (pte->present)
 	{
 		if (allocated_pde) {
-			arch_munmap(pt, PAGE_SIZE);
+			munmap(pt, PAGE_SIZE);
 		}
 		return (ERR_ALREADY_MAPPED);
 	}
@@ -60,7 +60,7 @@ arch_map_virt_to_phys(virt_addr_t va, phys_addr_t pa)
 }
 
 status_t
-arch_map_page(virt_addr_t va)
+map_page(virt_addr_t va)
 {
 	phys_addr_t pa;
 	status_t s;
@@ -68,7 +68,7 @@ arch_map_page(virt_addr_t va)
 	pa = alloc_frame();
 	if (pa != NULL_FRAME)
 	{
-		s = arch_map_virt_to_phys(va, pa);
+		s = map_virt_to_phys(va, pa);
 		if (s == OK) {
 			return (OK);
 		}
@@ -79,7 +79,7 @@ arch_map_page(virt_addr_t va)
 }
 
 void
-arch_munmap(virt_addr_t va, size_t size)
+munmap(virt_addr_t va, size_t size)
 {
 	virt_addr_t ori_va;
 	struct pagedir_entry *pde;
@@ -180,21 +180,21 @@ void
 vmm_test(void)
 {
 	assert(!is_allocated((virt_addr_t)0xDEADB000));
-	assert_eq(arch_map_page((virt_addr_t)0xDEADB000), OK);
+	assert_eq(map_page((virt_addr_t)0xDEADB000), OK);
 	assert(is_allocated((virt_addr_t)0xDEADB000));
 	assert(!is_allocated((virt_addr_t)0xDEADA000));
 	assert(!is_allocated((virt_addr_t)0xDEADC000));
 	assert_eq(*(char *)0xDEADB000, 42);
 	*(char *)0xDEADB000 = 43;
 	assert_eq(*(char *)0xDEADB000, 43);
-	assert_eq(arch_map_page((virt_addr_t)0xDEADB000), ERR_ALREADY_MAPPED);
+	assert_eq(map_page((virt_addr_t)0xDEADB000), ERR_ALREADY_MAPPED);
 
 	/* Munmap */
-	arch_munmap((virt_addr_t)0xDEADB000, PAGE_SIZE);
+	munmap((virt_addr_t)0xDEADB000, PAGE_SIZE);
 	assert(!is_allocated((virt_addr_t)0xDEADB000));
 
 	/* Mmap */
-	assert_eq(arch_mmap((virt_addr_t)0xDEADA000, 3 * PAGE_SIZE), (virt_addr_t)0xDEADA000);
+	assert_eq(mmap((virt_addr_t)0xDEADA000, 3 * PAGE_SIZE), (virt_addr_t)0xDEADA000);
 	assert(!is_allocated((virt_addr_t)0xDEAD9000));
 	assert(is_allocated((virt_addr_t)0xDEADA000));
 	assert(is_allocated((virt_addr_t)0xDEADB000));
@@ -202,7 +202,7 @@ vmm_test(void)
 	assert(!is_allocated((virt_addr_t)0xDEADD000));
 
 	/* Overlapping mmap */
-	assert_eq(arch_mmap((virt_addr_t)0xDEAD8000, 5 * PAGE_SIZE), NULL);
+	assert_eq(mmap((virt_addr_t)0xDEAD8000, 5 * PAGE_SIZE), NULL);
 	assert(!is_allocated((virt_addr_t)0xDEAD7000));
 	assert(!is_allocated((virt_addr_t)0xDEAD8000));
 	assert(!is_allocated((virt_addr_t)0xDEAD9000));

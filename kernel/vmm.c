@@ -26,7 +26,7 @@
 ** Weak symbol, should be re-implemented for each supported architecture.
 */
 __weak status_t
-arch_map_virt_to_phys(virt_addr_t va __unused, phys_addr_t pa __unused)
+map_virt_to_phys(virt_addr_t va __unused, phys_addr_t pa __unused)
 {
 	return (ERR_NOT_IMPLEMENTED);
 }
@@ -37,7 +37,7 @@ arch_map_virt_to_phys(virt_addr_t va __unused, phys_addr_t pa __unused)
 ** Weak symbol, should be re-implemented for each supported architecture.
 */
 __weak status_t
-arch_map_page(virt_addr_t va __unused)
+map_page(virt_addr_t va __unused)
 {
 	return (ERR_NOT_IMPLEMENTED);
 }
@@ -48,7 +48,7 @@ arch_map_page(virt_addr_t va __unused)
 ** Weak symbol, should be re-implemented for each supported architecture.
 */
 __weak void
-arch_munmap(virt_addr_t va __unused, size_t s __unused)
+munmap(virt_addr_t va __unused, size_t s __unused)
 {}
 
 /*
@@ -65,7 +65,7 @@ arch_munmap(virt_addr_t va __unused, size_t s __unused)
 ** a default implemententation is given.
 */
 __weak virt_addr_t
-arch_mmap(virt_addr_t va, size_t size)
+mmap(virt_addr_t va, size_t size)
 {
 	virt_addr_t ori_va;
 
@@ -80,8 +80,8 @@ arch_mmap(virt_addr_t va, size_t size)
 	{
 		while (va < ori_va + size)
 		{
-			if (unlikely(arch_map_page(va) != OK)) {
-				arch_munmap(ori_va, va - ori_va);
+			if (unlikely(map_page(va) != OK)) {
+				munmap(ori_va, va - ori_va);
 				return (NULL);
 			}
 			va += PAGE_SIZE;

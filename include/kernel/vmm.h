@@ -16,9 +16,9 @@
 
 typedef void 		*virt_addr_t;
 
-status_t		arch_map_virt_to_phys();
-status_t		arch_map_page(virt_addr_t va);
-virt_addr_t		arch_mmap(virt_addr_t va, size_t size);
-void			arch_munmap(virt_addr_t va, size_t size);
+status_t		map_virt_to_phys();
+status_t		map_page(virt_addr_t va);
+virt_addr_t		mmap(virt_addr_t va, size_t size);
+void			munmap(virt_addr_t va, size_t size);
 
 #endif /* !_KERNEL_VMM_H_ */
