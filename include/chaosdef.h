@@ -33,6 +33,8 @@
 # define __aligned(x)		__attribute__((aligned (x)))
 # define __section(s)		__attribute__((section (s)))
 # define __noreturn		__attribute__((noreturn))
+# define likely(x)		__builtin_expect((x), 1)
+# define unlikely(x)		__builtin_expect((x), 0)
 
 # include <debug.h>
 

@@ -34,21 +34,10 @@ arch_map_virt_to_phys(virt_addr_t va __unused, phys_addr_t pa __unused)
 /*
 ** Maps random physical addresses to the given virtual address.
 **
-** Weak symbol, can be re-implemented for each supported architecture, but
-** a default implemententation is given.
+** Weak symbol, should be re-implemented for each supported architecture.
 */
 __weak status_t
 arch_map_page(virt_addr_t va __unused)
-{
-	return (ERR_NOT_IMPLEMENTED);
-}
-
-/*
-** Map contiguous virtual addresses to random physical addresses.
-** In case of error, the state mush be as it was before the call.
-*/
-__weak status_t
-arch_mmap(virt_addr_t va __unused, size_t size __unused)
 {
 	return (ERR_NOT_IMPLEMENTED);
 }
@@ -58,10 +47,48 @@ arch_mmap(virt_addr_t va __unused, size_t size __unused)
 **
 ** Weak symbol, should be re-implemented for each supported architecture.
 */
-__weak status_t
-arch_munmap(virt_addr_t va __unused)
+__weak void
+arch_munmap(virt_addr_t va __unused, size_t s __unused)
+{}
+
+/*
+** Map contiguous virtual addresses to a random physical addresses.
+** In case of error, the state mush be as it was before the call.
+** If the given virtual address is NULL, then the kernel chooses
+** the destination address.
+** Size must be page aligned.
+**
+** Returns the virtual address holding the mapping, or NULL if
+** it fails.
+**
+** Weak symbol, can be re-implemented for each supported architecture, but
+** a default implemententation is given.
+*/
+__weak virt_addr_t
+arch_mmap(virt_addr_t va, size_t size)
 {
-	return (ERR_NOT_IMPLEMENTED);
+	virt_addr_t ori_va;
+
+	assert(IS_PAGE_ALIGNED(va));
+	assert(IS_PAGE_ALIGNED(size));
+	ori_va = va;
+	if (va == NULL) /* Random virtual address */
+	{
+		panic("NULL mmap() not implemented (yet)!");
+	}
+	else
+	{
+		while (va < ori_va + size)
+		{
+			if (unlikely(arch_map_page(va) != OK)) {
+				arch_munmap(ori_va, va - ori_va);
+				return (NULL);
+			}
+			va += PAGE_SIZE;
+		}
+		return (ori_va);
+	}
+	return (NULL);
 }
 
 /*
@@ -86,8 +113,7 @@ vmm_init(enum init_level il __unused)
 
 __weak void
 vmm_test(void)
-{
-}
+{}
 
 NEW_INIT_HOOK(vmm, &vmm_init, CHAOS_INIT_LEVEL_VMM);
 NEW_UNIT_TEST(vmm, &vmm_test, UNIT_TEST_LEVEL_MEMORY);

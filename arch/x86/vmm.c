@@ -43,7 +43,7 @@ arch_map_virt_to_phys(virt_addr_t va, phys_addr_t pa)
 	if (pte->present)
 	{
 		if (allocated_pde) {
-			arch_munmap(pt);
+			arch_munmap(pt, PAGE_SIZE);
 		}
 		return (ERR_ALREADY_MAPPED);
 	}
@@ -78,29 +78,28 @@ arch_map_page(virt_addr_t va)
 	return (ERR_NO_MEMORY);
 }
 
-status_t
-arch_mmap(virt_addr_t va __unused, size_t size __unused)
+void
+arch_munmap(virt_addr_t va, size_t size)
 {
-	return (ERR_NOT_IMPLEMENTED);
-}
-
-status_t
-arch_munmap(virt_addr_t va)
-{
+	virt_addr_t ori_va;
 	struct pagedir_entry *pde;
 	struct pagetable_entry *pte;
 
 	assert(IS_PAGE_ALIGNED(va));
-	pde = GET_PAGE_DIRECTORY->entries + GET_PD_IDX(va);
-	pte = GET_PAGE_TABLE(GET_PD_IDX(va))->entries + GET_PT_IDX(va);
-	if (pde->present && pte->present)
+	assert(IS_PAGE_ALIGNED(size));
+	ori_va = va;
+	while (va < ori_va + size)
 	{
-		free_frame(pte->frame << 12u);
-		pte->value = 0;
-		invlpg(va);
-		return (OK);
+		pde = GET_PAGE_DIRECTORY->entries + GET_PD_IDX(va);
+		pte = GET_PAGE_TABLE(GET_PD_IDX(va))->entries + GET_PT_IDX(va);
+		if (pde->present && pte->present)
+		{
+			free_frame(pte->frame << 12u);
+			pte->value = 0;
+			invlpg(va);
+		}
+		va += PAGE_SIZE;
 	}
-	return (ERR_NOT_MAPPED);
 }
 
 void
@@ -190,7 +189,25 @@ vmm_test(void)
 	assert_eq(*(char *)0xDEADB000, 43);
 	assert_eq(arch_map_page((virt_addr_t)0xDEADB000), ERR_ALREADY_MAPPED);
 
-	assert_eq(arch_munmap((virt_addr_t)0xDEADB000), OK);
+	/* Munmap */
+	arch_munmap((virt_addr_t)0xDEADB000, PAGE_SIZE);
 	assert(!is_allocated((virt_addr_t)0xDEADB000));
-	assert_eq(arch_munmap((virt_addr_t)0xDEADB000), ERR_NOT_MAPPED);
+
+	/* Mmap */
+	assert_eq(arch_mmap((virt_addr_t)0xDEADA000, 3 * PAGE_SIZE), (virt_addr_t)0xDEADA000);
+	assert(!is_allocated((virt_addr_t)0xDEAD9000));
+	assert(is_allocated((virt_addr_t)0xDEADA000));
+	assert(is_allocated((virt_addr_t)0xDEADB000));
+	assert(is_allocated((virt_addr_t)0xDEADC000));
+	assert(!is_allocated((virt_addr_t)0xDEADD000));
+
+	/* Overlapping mmap */
+	assert_eq(arch_mmap((virt_addr_t)0xDEAD8000, 5 * PAGE_SIZE), NULL);
+	assert(!is_allocated((virt_addr_t)0xDEAD7000));
+	assert(!is_allocated((virt_addr_t)0xDEAD8000));
+	assert(!is_allocated((virt_addr_t)0xDEAD9000));
+	assert(is_allocated((virt_addr_t)0xDEADA000));
+	assert(is_allocated((virt_addr_t)0xDEADB000));
+	assert(is_allocated((virt_addr_t)0xDEADC000));
+	assert(!is_allocated((virt_addr_t)0xDEADD000));
 }
