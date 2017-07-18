@@ -28,9 +28,21 @@ arch_map_virt_to_phys(virt_addr_t va, phys_addr_t pa)
 }
 
 status_t
-arch_unmap_vaddress(virt_addr_t va __unused)
+arch_map_page(virt_addr_t va __unused)
 {
-	return (OK);
+	return (ERR_NOT_IMPLEMENTED);
+}
+
+status_t
+arch_mmap(virt_addr_t va __unused, size_t size __unused)
+{
+	return (ERR_NOT_IMPLEMENTED);
+}
+
+status_t
+arch_munmap(virt_addr_t va __unused)
+{
+	return (ERR_NOT_IMPLEMENTED);
 }
 
 void

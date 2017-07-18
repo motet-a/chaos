@@ -8,17 +8,9 @@
 \* ------------------------------------------------------------------------ */
 
 #include <kernel/init.h>
+#include <kernel/unit-tests.h>
 #include <kernel/vmm.h>
 #include <stdio.h>
-
-/*
-** Initialises the arch-dependent stuff of virtual memory management.
-**
-** Weak symbol, should be re-implemented for each supported architecture.
-*/
-__weak void
-arch_vmm_init(void)
-{}
 
 /*
 ** Maps a physical address to a virtual one.
@@ -32,15 +24,46 @@ arch_map_virt_to_phys(virt_addr_t va __unused, phys_addr_t pa __unused)
 }
 
 /*
+** Maps random physical addresses to the given virtual address.
+**
+** Weak symbol, can be re-implemented for each supported architecture, but
+** a default implemententation is given.
+*/
+__weak status_t
+arch_map_page(virt_addr_t va __unused)
+{
+	return (ERR_NOT_IMPLEMENTED);
+}
+
+/*
+** Map contiguous virtual addresses to random physical addresses.
+** In case of error, the state mush be as it was before the call.
+*/
+__weak status_t
+arch_mmap(virt_addr_t va __unused, size_t size __unused)
+{
+	return (ERR_NOT_IMPLEMENTED);
+}
+
+/*
 ** Unmaps a virtual address.
 **
 ** Weak symbol, should be re-implemented for each supported architecture.
 */
 __weak status_t
-arch_unmap_vaddress(virt_addr_t va __unused)
+arch_munmap(virt_addr_t va __unused)
 {
 	return (ERR_NOT_IMPLEMENTED);
 }
+
+/*
+** Initialises the arch-dependent stuff of virtual memory management.
+**
+** Weak symbol, should be re-implemented for each supported architecture.
+*/
+__weak void
+arch_vmm_init(void)
+{}
 
 /*
 ** Initalises the arch-independant stuff of virtual memory management.
@@ -53,4 +76,10 @@ vmm_init(enum init_level il __unused)
 	printf("[OK]\tVirtual Memory Management\n");
 }
 
+static void
+vmm_test(void)
+{
+}
+
 NEW_INIT_HOOK(vmm, &vmm_init, CHAOS_INIT_LEVEL_VMM);
+NEW_UNIT_TEST(vmm, &vmm_test, UNIT_TEST_LEVEL_MEMORY + 1);
