@@ -85,9 +85,22 @@ arch_mmap(virt_addr_t va __unused, size_t size __unused)
 }
 
 status_t
-arch_munmap(virt_addr_t va __unused)
+arch_munmap(virt_addr_t va)
 {
-	return (ERR_NOT_IMPLEMENTED);
+	struct pagedir_entry *pde;
+	struct pagetable_entry *pte;
+
+	assert(IS_PAGE_ALIGNED(va));
+	pde = GET_PAGE_DIRECTORY->entries + GET_PD_IDX(va);
+	pte = GET_PAGE_TABLE(GET_PD_IDX(va))->entries + GET_PT_IDX(va);
+	if (pde->present && pte->present)
+	{
+		free_frame(pte->frame << 12u);
+		pte->value = 0;
+		invlpg(va);
+		return (OK);
+	}
+	return (ERR_NOT_MAPPED);
 }
 
 void
@@ -176,4 +189,8 @@ vmm_test(void)
 	*(char *)0xDEADB000 = 43;
 	assert_eq(*(char *)0xDEADB000, 43);
 	assert_eq(arch_map_page((virt_addr_t)0xDEADB000), ERR_ALREADY_MAPPED);
+
+	assert_eq(arch_munmap((virt_addr_t)0xDEADB000), OK);
+	assert(!is_allocated((virt_addr_t)0xDEADB000));
+	assert_eq(arch_munmap((virt_addr_t)0xDEADB000), ERR_NOT_MAPPED);
 }

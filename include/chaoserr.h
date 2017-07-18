@@ -48,6 +48,7 @@ enum				status
 
 	/* Mapping errors */
 	ERR_ALREADY_MAPPED,
+	ERR_NOT_MAPPED,
 };
 
 typedef enum status	status_t;
