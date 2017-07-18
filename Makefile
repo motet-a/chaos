@@ -39,7 +39,8 @@ CFLAGS		+= \
 			-std=gnu11 \
 			-O2 \
 			-isystem include \
-			-isystem include/lib/libc
+			-isystem include/lib/libc \
+			-isystem include/arch/$(ARCH)/
 SRC_C		:= $(shell find "arch/$(ARCH)/" "platform/$(PLATFORM)" kernel lib -name *.c)
 DEP		:= $(SRC_C:.c=.d)
 
