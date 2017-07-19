@@ -167,11 +167,14 @@ vga_init(enum init_level il __unused)
 	struct io_output_callbacks cb;
 
 	init_lock(&vga.lock);
-	cb.putc = vga_putchar;
-	cb.puts = vga_puts;
+	vga.cursor_x = 0;
+	vga.cursor_y = 0;
 	vga.vgabuff = VGA_BUFFER;
 	vga_set_color(VGA_LIGHT_PINK, VGA_BLACK);
 	vga_clear();
+
+	cb.putc = vga_putchar;
+	cb.puts = vga_puts;
 	register_io_output_callbacks(&cb, IO_OUTPUT_CONSOLE);
 }
 
