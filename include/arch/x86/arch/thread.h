@@ -7,12 +7,12 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _ARCH_X86_THREAD_H_
-# define _ARCH_X86_THREAD_H_
+#ifndef _ARCH_X86_ARCH_THREAD_H_
+# define _ARCH_X86_ARCH_THREAD_H_
 
 struct arch_thread
 {
 
 };
 
-#endif /* _ARCH_X86_THREAD_H_ */
+#endif /* _ARCH_X86_ARCH_THREAD_H_ */
