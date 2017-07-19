@@ -132,9 +132,6 @@ interrupt_init(enum init_level il __unused)
 	outb(0xA1, 0x01);
 	outb(0x21, 0x0);
 	outb(0xA1, 0x0);
-
-	/* Enable interruptions */
-	sti();
 }
 
 NEW_INIT_HOOK(idt_early, &interrupt_init, CHAOS_INIT_LEVEL_ARCH_EARLY);

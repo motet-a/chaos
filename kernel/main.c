@@ -8,8 +8,7 @@
 \* ------------------------------------------------------------------------ */
 
 #include <kernel/init.h>
-#include <kernel/pmm.h>
-#include <kernel/vmm.h>
+#include <kernel/thread.h>
 #include <kernel/options.h>
 #include <multiboot2.h>
 #include <stdio.h>
@@ -47,6 +46,9 @@ multiboot_load(uintptr mb_addr)
 int
 kernel_main(uintptr mb_addr)
 {
+	/* Create the boot thread */
+	thread_init();
+
 	/* Super super early hooks goes first. */
 	kernel_init_level(CHAOS_INIT_LEVEL_EARLIEST, CHAOS_INIT_LEVEL_ARCH_EARLY - 1);
 
@@ -67,8 +69,13 @@ kernel_main(uintptr mb_addr)
 
 	/* Drivers hooks would go there */
 
-	/* We're now ready to go on */
+	/* Print hello message */
 	printf("\nWelcome to ChaOS\n\n");
+
+	thread_dump();
+
+	/* We're now ready to go on */
+	thread_become_idle();
 
 	return (0);
 }

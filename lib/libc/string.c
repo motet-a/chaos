@@ -21,6 +21,38 @@ strlen(char const *str)
 	return ((size_t)(s - str));
 }
 
+char *
+strcpy(char *dest, char const *src)
+{
+	char *ori_dest;
+
+	ori_dest = dest;
+	while (*src)
+	{
+		*dest = *src;
+		++dest;
+		++src;
+	}
+	return (ori_dest);
+}
+
+char *
+strncpy(char *dest, char const *src, size_t n)
+{
+	size_t i;
+
+	i = 0;
+	while (i < n && src[i] != '\0') {
+		dest[i] = src[i];
+		++i;
+	}
+	while (i < n) {
+		dest[i] = '\0';
+		++i;
+	}
+	return (dest);
+}
+
 int
 strcmp(char const *s1, char const *s2)
 {
