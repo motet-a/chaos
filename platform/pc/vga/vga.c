@@ -9,6 +9,7 @@
 
 #include <kernel/linker.h>
 #include <kernel/init.h>
+#include <arch/x86/asm.h>
 #include <platform/pc/vga.h>
 #include <lib/io.h>
 #include <string.h>
@@ -26,6 +27,18 @@ void
 vga_set_color(enum VGA_COLOR fg, enum VGA_COLOR bg)
 {
 	vga.vga_attrib = ((bg << 4u) | (fg & 0x0F)) << 8u;
+}
+
+void
+move_cursor(void)
+{
+	uint tmp;
+
+	tmp = vga.cursor_y * VGA_WIDTH + vga.cursor_x;
+	outb(0x3D4, 14);
+	outb(0x3D5, tmp >> 8);
+	outb(0x3D4, 15);
+	outb(0x3D5, tmp);
 }
 
 /*
@@ -50,6 +63,9 @@ vga_clear(void)
 		memcpy(vga.vgabuff + VGA_WIDTH * i, vga.vgabuff, sizeof(uint16) * VGA_WIDTH);
 		++i;
 	}
+	vga.cursor_x = 0;
+	vga.cursor_y = 0;
+	move_cursor();
 }
 
 /*
@@ -72,10 +88,10 @@ vga_scroll(void)
 }
 
 /*
-** Prints a single character on the screen
+** Prints a single character on the screen.
 */
 static int
-vga_putchar(int c)
+vga_naked_putchar(int c)
 {
 	switch (c)
 	{
@@ -104,6 +120,16 @@ vga_putchar(int c)
 	return (1);
 }
 
+static int
+vga_putchar(int c)
+{
+	int ret;
+
+	ret = vga_naked_putchar(c);
+	move_cursor();
+	return (ret);
+}
+
 /*
 ** Prints an array of characters on the screen
 */
@@ -114,9 +140,10 @@ vga_puts(char const *str)
 
 	s = str;
 	while (*str) {
-		vga_putchar(*str);
+		vga_naked_putchar(*str);
 		++str;
 	}
+	move_cursor();
 	return (str - s);
 }
 
