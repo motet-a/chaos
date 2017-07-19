@@ -40,9 +40,25 @@ inb(ushort port)
 }
 
 static inline uintptr
+get_eflags(void)
+{
+	uintptr eflags;
+
+	asm volatile("pushfl; popl %0" : "=r" (eflags));
+	return (eflags);
+}
+
+static inline void
+set_eflags(uintptr eflags)
+{
+	asm volatile("pushl %0; popfl" :: "r" (eflags));
+}
+
+static inline uintptr
 get_cr2(void)
 {
 	uintptr cr2;
+
 	asm volatile("mov %%cr2, %0" : "=r"(cr2));
 	return (cr2);
 }

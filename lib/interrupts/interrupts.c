@@ -27,11 +27,23 @@ default_unmask_interrupt(uint vector __unused)
 	return (ERR_NOT_IMPLEMENTED);
 }
 
+static bool
+default_are_int_enabled(void)
+{
+	return (false);
+}
+
 static void
 default_enable_interrupts(void) {}
 
 static void
 default_disable_interrupts(void) {}
+
+static void
+default_push_interrupts(uintptr *save __unused) {}
+
+static void
+default_pop_interrupts(uintptr save __unused) {}
 
 /*
 ** Structure holding the current callbacks of this API
@@ -43,6 +55,9 @@ static struct interrupts_callbacks interrupts_callbacks =
 	.unmask_interrupt = &default_unmask_interrupt,
 	.disable_interrupts = &default_disable_interrupts,
 	.enable_interrupts = &default_enable_interrupts,
+	.push_interrupts = &default_push_interrupts,
+	.pop_interrupts = &default_pop_interrupts,
+	.are_int_enabled = &default_are_int_enabled,
 };
 
 status_t
@@ -100,6 +115,24 @@ handle_interrupt(uint vector)
 		return (OK);
 	}
 	return (ERR_INVALID_ARGS);
+}
+
+void
+push_interrupts(uintptr *save)
+{
+	interrupts_callbacks.push_interrupts(save);
+}
+
+void
+pop_interrupts(uintptr save)
+{
+	interrupts_callbacks.pop_interrupts(save);
+}
+
+bool
+are_int_enabled(void)
+{
+	return (interrupts_callbacks.are_int_enabled());
 }
 
 /*

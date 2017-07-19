@@ -39,7 +39,6 @@ struct thread
 void		thread_init(void);
 void		thread_become_idle(void);
 void		thread_yield(void);
-void		thread_reschedule(void);
 void		thread_dump(void);
 
 /* Must be implemented in each architecture */

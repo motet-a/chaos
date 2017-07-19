@@ -78,23 +78,29 @@ idle_thread_routine(void)
 void
 thread_become_idle(void)
 {
+	assert(!are_int_enabled());
+
+	/* Set the thread name to 'idle' */
 	thread_set_name("idle");
 
 	/* Enable interrupts */
 	enable_interrupts();
 
+	/* Yield the cpu to an other thread */
 	thread_yield();
 
+	/* Go and do the idle routine */
 	idle_thread_routine();
 }
 
 /*
 ** Finds and executes the next runnable thread.
 */
-void
+static void
 thread_reschedule(void)
 {
-	// TODO
+	assert(!are_int_enabled());
+	/* TODO assert that we hold the process table here */
 }
 
 /*
@@ -107,11 +113,22 @@ void
 thread_yield(void)
 {
 	struct thread *t;
+	uintptr save;
 
 	t = get_current_thread();
 	assert(t->state == RUNNING);
+
+	push_interrupts(&save);
+	disable_interrupts();
+
+	/* TODO lock the process table here */
+
 	t->state = RUNNABLE;
 	thread_reschedule();
+
+	/* TODO unlock the process table here */
+
+	pop_interrupts(save);
 }
 
 /*

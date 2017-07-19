@@ -21,6 +21,9 @@ typedef status_t	(*mask_interrupt_cb)(uint vector);
 typedef status_t	(*unmask_interrupt_cb)(uint vector);
 typedef void		(*enable_interrupts_cb)(void);
 typedef void		(*disable_interrupts_cb)(void);
+typedef void		(*push_interrupts_cb)(uintptr *save);
+typedef void		(*pop_interrupts_cb)(uintptr save);
+typedef bool		(*are_int_enabled_cb)(void);
 
 struct			interrupts_callbacks
 {
@@ -28,6 +31,9 @@ struct			interrupts_callbacks
 	unmask_interrupt_cb unmask_interrupt;
 	enable_interrupts_cb enable_interrupts;
 	disable_interrupts_cb disable_interrupts;
+	push_interrupts_cb push_interrupts;
+	pop_interrupts_cb pop_interrupts;
+	are_int_enabled_cb are_int_enabled;
 };
 
 status_t		mask_interrupt(uint v);
@@ -38,5 +44,8 @@ status_t		register_int_handler(uint vector, int_handler handler);
 status_t		unregister_int_handler(uint vector);
 status_t		handle_interrupt(uint vector);
 void			register_interrupt_callbacks(struct interrupts_callbacks *);
+void			push_interrupts(uintptr *save);
+void			pop_interrupts(uintptr save);
+bool			are_int_enabled(void);
 
 #endif /* !_LIB_INTERRUPTS_H_ */

@@ -110,6 +110,27 @@ x86_disable_interrupts(void)
 }
 
 static void
+x86_push_interrupts(uintptr *save)
+{
+	*save = get_eflags();
+}
+
+static void
+x86_pop_interrupts(uintptr save)
+{
+	set_eflags(save);
+}
+
+static bool
+x86_are_int_enabled(void)
+{
+	uint eflags;
+
+	eflags = get_eflags();
+	return ((bool)(eflags & (1 << 9)));
+}
+
+static void
 interrupt_init(enum init_level il __unused)
 {
 	struct interrupts_callbacks cb;
@@ -118,6 +139,9 @@ interrupt_init(enum init_level il __unused)
 	cb.unmask_interrupt = x86_unmask_interrupt;
 	cb.enable_interrupts = x86_enable_interrupts;
 	cb.disable_interrupts = x86_disable_interrupts;
+	cb.push_interrupts = x86_push_interrupts;
+	cb.pop_interrupts = x86_pop_interrupts;
+	cb.are_int_enabled = x86_are_int_enabled;
 
 	register_interrupt_callbacks(&cb);
 
