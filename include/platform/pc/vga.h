@@ -11,6 +11,7 @@
 # define _PLATFORM_PC_VGA_H_
 
 # include <chaosdef.h>
+# include <kernel/spinlock.h>
 
 /*
 ** All the colors that the vga mode can handle
@@ -37,6 +38,7 @@ enum			VGA_COLOR
 
 struct			vga
 {
+	struct spinlock	lock;
 	uint16		vga_attrib;
 	uint16		*vgabuff;
 	uint		cursor_x;

@@ -9,6 +9,7 @@
 
 #include <kernel/spinlock.h>
 #include <arch/common_op.h>
+#include <stdio.h>
 
 void
 init_lock(struct spinlock *lock)

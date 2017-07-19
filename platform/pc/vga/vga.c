@@ -26,10 +26,15 @@ static uint16 *const	VGA_BUFFER	= (uint16*)((char *)KERNEL_VIRTUAL_BASE + 0xB800
 void
 vga_set_color(enum VGA_COLOR fg, enum VGA_COLOR bg)
 {
+	acquire_lock(&vga.lock);
 	vga.vga_attrib = ((bg << 4u) | (fg & 0x0F)) << 8u;
+	release_lock(&vga.lock);
 }
 
-void
+/*
+** Moves the visual cursor to it's real coordinates.
+*/
+static void
 move_cursor(void)
 {
 	uint tmp;
@@ -51,6 +56,7 @@ vga_clear(void)
 	uint16 blank;
 
 	i = 0;
+	acquire_lock(&vga.lock);
 	blank = vga.vga_attrib | 0x20;
 	while (i < VGA_WIDTH)
 	{
@@ -66,6 +72,7 @@ vga_clear(void)
 	vga.cursor_x = 0;
 	vga.cursor_y = 0;
 	move_cursor();
+	release_lock(&vga.lock);
 }
 
 /*
@@ -125,8 +132,10 @@ vga_putchar(int c)
 {
 	int ret;
 
+	acquire_lock(&vga.lock);
 	ret = vga_naked_putchar(c);
 	move_cursor();
+	release_lock(&vga.lock);
 	return (ret);
 }
 
@@ -139,11 +148,13 @@ vga_puts(char const *str)
 	char const *s;
 
 	s = str;
+	acquire_lock(&vga.lock);
 	while (*str) {
 		vga_naked_putchar(*str);
 		++str;
 	}
 	move_cursor();
+	release_lock(&vga.lock);
 	return (str - s);
 }
 
@@ -155,6 +166,7 @@ vga_init(enum init_level il __unused)
 {
 	struct io_output_callbacks cb;
 
+	init_lock(&vga.lock);
 	cb.putc = vga_putchar;
 	cb.puts = vga_puts;
 	vga.vgabuff = VGA_BUFFER;
