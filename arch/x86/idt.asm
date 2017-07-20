@@ -140,7 +140,7 @@ section .text
 ; Set-up the Interrupt Descriptor Table
 idt_setup:
 	; Push common parameters
-	push dword 0xF			; Entry type (Trap Gate 32 bits)
+	push dword 0xE			; Entry type (Interrupt Gate 32 bits)
 	push dword 0x0			; DPL (Ring 0)
 	push dword CODE_SELECTOR	; Code selector
 
