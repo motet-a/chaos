@@ -26,13 +26,11 @@ holding_lock(struct spinlock *lock)
 void
 acquire_lock(struct spinlock *lock)
 {
-	assert_eq(holding_lock(lock), false);
 	while (atomic_exchange(&lock->locked, 1) == 1);
 }
 
 void
 release_lock(struct spinlock *lock)
 {
-	assert_eq(holding_lock(lock), true);
 	atomic_exchange(&lock->locked, 0);
 }
