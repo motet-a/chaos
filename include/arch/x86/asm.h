@@ -44,14 +44,14 @@ get_eflags(void)
 {
 	uintptr eflags;
 
-	asm volatile("pushfl; popl %0" : "=r" (eflags));
+	asm volatile("pushfl; popl %0" : "=rm" (eflags) :: "memory");
 	return (eflags);
 }
 
 static inline void
 set_eflags(uintptr eflags)
 {
-	asm volatile("pushl %0; popfl" :: "r" (eflags));
+	asm volatile("pushl %0; popfl" :: "g" (eflags) : "memory", "cc");
 }
 
 static inline uintptr
@@ -61,6 +61,15 @@ get_cr2(void)
 
 	asm volatile("mov %%cr2, %0" : "=r"(cr2));
 	return (cr2);
+}
+
+static inline uintptr
+get_cr3(void)
+{
+	uintptr cr3;
+
+	asm volatile("mov %%cr3, %0" : "=r"(cr3));
+	return (cr3);
 }
 
 static inline void

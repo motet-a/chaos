@@ -66,4 +66,7 @@ typedef uintptr_t		uintptr;
 /* Test if a given address is page-aligned */
 # define IS_PAGE_ALIGNED(x)	(!((uintptr)(x) & PAGE_SIZE_MASK))
 
+# define ROUND_DOWN(x, y)	((x) & ~((y) - 1))
+# define ALIGN(x, y)		(((x) + ((y) - 1)) & ~((y) - 1))
+
 #endif /* !_CHAOS_DEF_H_ */

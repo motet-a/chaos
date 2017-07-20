@@ -7,46 +7,80 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#include <kernel/init.h>
 #include <kernel/thread.h>
 #include <lib/interrupts.h>
 #include <stdio.h>
 #include <string.h>
 
-/* Idle thread, the one runs when there is nothing else to do */
-static struct thread idle_thread;
+/* Next pid available */
+static pid_t next_pid = 1;
+
+/* Thread table */
+struct thread thread_table[MAX_PID];
+struct thread *idle_thread = thread_table;
 
 /* String to print thread state */
 static char const *thread_state_str[] =
 {
-	[SUSPENDED] = "SUSPENDED",
-	[RUNNABLE] = "RUNNABLE",
-	[RUNNING] = "RUNNING",
-	[ZOMBIE] = "ZOMBIE",
+	[NONE]		= "NONE",
+	[SUSPENDED]	= "SUSPENDED",
+	[RUNNABLE]	= "RUNNABLE",
+	[RUNNING]	= "RUNNING",
+	[ZOMBIE]	= "ZOMBIE",
 };
 
 /*
-** Initializes the thread structure.
+** Look for the next available pid.
+** Returns -1 if no pid are available.
+**
+** TODO This function is unsafe and uncomplete right now.
+*/
+static pid_t
+find_next_pid()
+{
+	return (next_pid++);
+}
+
+/*
+** Sets the name of the given thread.
 */
 static void
-thread_init_struct(struct thread *t, const char *name)
+thread_set_name(struct thread *t, char const *name)
 {
-	memset(t, 0, sizeof(*t));
 	strncpy(t->name, name, sizeof(t->name) - 1);
 	t->name[sizeof(t->name) - 1] = '\0';
 }
 
 /*
-** Sets the name of the thread.
+** Creates a new thread.
+** The newly created thread is in a suspended state,
+** so it should be resumed with thread_resume().
+**
+** Returns NULL if the thread couldn't be created.
 */
-static void
-thread_set_name(char const *name)
+struct thread *
+thread_create(char const *name, thread_entry_cb entry, size_t stack_size)
 {
 	struct thread *t;
+	pid_t pid;
 
-	t = get_current_thread();
-	strncpy(t->name, name, sizeof(t->name) - 1);
-	t->name[sizeof(t->name) - 1] = '\0';
+	pid = find_next_pid();
+	if (unlikely(pid == -1)) {
+		return (NULL);
+	}
+
+	t = thread_table + pid;
+	memset(t, 0, sizeof(*t));
+	thread_set_name(t, name);
+	t->pid = pid;
+	t->stack_size = stack_size;
+	t->entry = entry;
+	t->state = SUSPENDED;
+
+	/* TODO set thread stack */
+
+	arch_init_thread(t);
+	return (t);
 }
 
 /*
@@ -68,7 +102,8 @@ idle_thread_routine(void)
 		*/
 		while(i++ < 1000000)
 			printf("");
-		printf(".");
+		printf("MyPid: %i\n", get_current_thread()->pid);
+		thread_yield();
 	}
 }
 
@@ -81,7 +116,7 @@ thread_become_idle(void)
 	assert(!are_int_enabled());
 
 	/* Set the thread name to 'idle' */
-	thread_set_name("idle");
+	thread_set_name(get_current_thread(), "idle");
 
 	/* Enable interrupts */
 	enable_interrupts();
@@ -89,58 +124,23 @@ thread_become_idle(void)
 	/* Yield the cpu to an other thread */
 	thread_yield();
 
-	/* Go and do the idle routine */
+	/* Do the idle routine */
 	idle_thread_routine();
 }
 
 /*
-** Finds and executes the next runnable thread.
-*/
-static void
-thread_reschedule(void)
-{
-	assert(!are_int_enabled());
-	/* TODO assert that we hold the process table here */
-}
-
-/*
-** Yield the cpu to an other thread.
-** This function will return at a later time, or
-** possibly immediately if no other threads are waiting
-** to be executed. (don't worry, they are guilty)
-*/
-void
-thread_yield(void)
-{
-	struct thread *t;
-	uintptr save;
-
-	t = get_current_thread();
-	assert(t->state == RUNNING);
-
-	push_interrupts(&save);
-	disable_interrupts();
-
-	/* TODO lock the process table here */
-
-	t->state = RUNNABLE;
-	thread_reschedule();
-
-	/* TODO unlock the process table here */
-
-	pop_interrupts(save);
-}
-
-/*
 ** Put us in some sort of thread context.
+** Called from kmain.
 */
 void
 thread_init(void)
 {
 	struct thread *t;
 
-	t = &idle_thread;
-	thread_init_struct(t, "boot");
+	t = idle_thread;
+
+	memset(t, 0, sizeof(*t));
+	thread_set_name(t, "boot");
 	t->state = RUNNING;
 	set_current_thread(t);
 }

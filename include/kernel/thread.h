@@ -10,12 +10,21 @@
 #ifndef _KERNEL_THREAD_H_
 # define _KERNEL_THREAD_H_
 
-# include <chaosdef.h>
+# include <kernel/vmm.h>
 # include <arch/thread.h>
+# include <chaosdef.h>
+
+/* Maximum number of threads */
+# define MAX_PID		(32u)
+# define DEFAULT_STACK_SIZE	(0x1000 * 16u)
+
+typedef int			pid_t;
+typedef void			(*thread_entry_cb)(void);
 
 enum thread_state
 {
-	SUSPENDED = 0,
+	NONE = 0,
+	SUSPENDED,
 	RUNNABLE,
 	RUNNING,
 	ZOMBIE,
@@ -23,26 +32,33 @@ enum thread_state
 
 struct thread
 {
+	/* Thread basic infos*/
 	char name[255];
+	pid_t pid;
+	enum thread_state state;
 
 	/* Thread stack */
-	void *stack;
+	virt_addr_t stack;
 	size_t stack_size;
 
 	/* arch stuff */
 	struct arch_thread arch;
 
-	/* Current state */
-	enum thread_state state;
+	/* entry point */
+	thread_entry_cb entry;
+
+	/* TODO add memory space of thread */
 };
 
 void		thread_init(void);
 void		thread_become_idle(void);
-void		thread_yield(void);
 void		thread_dump(void);
+void		thread_yield(void);
 
 /* Must be implemented in each architecture */
 void		set_current_thread(struct thread *);
 struct thread	*get_current_thread(void);
+void		arch_context_switch(struct thread *);
+void		arch_init_thread(struct thread *);
 
 #endif /* !_KERNEL_THREAD_H_ */

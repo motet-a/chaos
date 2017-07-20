@@ -74,7 +74,7 @@ kernel_main(uintptr mb_addr)
 
 	thread_dump();
 
-	/* We're now ready to go on */
+	/* Become the idle thread and enable interrupts */
 	thread_become_idle();
 
 	return (0);

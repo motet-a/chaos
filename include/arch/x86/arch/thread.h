@@ -12,7 +12,21 @@
 
 struct arch_thread
 {
+	virt_addr_t sp;
+};
 
+struct context_switch_frame
+{
+	uintptr edi;
+	uintptr esi;
+	uintptr ebp;
+	uintptr esp;
+	uintptr ebx;
+	uintptr edx;
+	uintptr ecx;
+	uintptr eax;
+	uintptr eflags;
+	uintptr eip;
 };
 
 #endif /* _ARCH_X86_ARCH_THREAD_H_ */
