@@ -50,15 +50,17 @@ struct thread
 	/* TODO add memory space of thread */
 };
 
+struct thread	*thread_create(char const *name, thread_entry_cb entry, size_t stack_size);
 void		thread_init(void);
 void		thread_become_idle(void);
 void		thread_dump(void);
 void		thread_yield(void);
+void		thread_resume(struct thread *);
 
 /* Must be implemented in each architecture */
 void		set_current_thread(struct thread *);
 struct thread	*get_current_thread(void);
-void		arch_context_switch(struct thread *);
+void		arch_context_switch(struct thread *old, struct thread *new);
 void		arch_init_thread(struct thread *);
 
 #endif /* !_KERNEL_THREAD_H_ */

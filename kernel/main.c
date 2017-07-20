@@ -40,12 +40,27 @@ multiboot_load(uintptr mb_addr)
 	printf("\n");
 }
 
+static void init(void)
+{
+	size_t i;
+
+	while (42) {
+		i = 0;
+		while(i++ < 1000000)
+			printf("");
+		thread_dump();
+		thread_yield();
+	}
+}
+
 /*
 ** Common entry point of the kernel.
 */
 int
 kernel_main(uintptr mb_addr)
 {
+	struct thread *t;
+
 	/* Create the boot thread */
 	thread_init();
 
@@ -69,10 +84,11 @@ kernel_main(uintptr mb_addr)
 
 	/* Drivers hooks would go there */
 
+	t = thread_create("init", &init, DEFAULT_STACK_SIZE);
+	thread_resume(t);
+
 	/* Print hello message */
 	printf("\nWelcome to ChaOS\n\n");
-
-	thread_dump();
 
 	/* Become the idle thread and enable interrupts */
 	thread_become_idle();

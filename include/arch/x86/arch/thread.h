@@ -10,12 +10,12 @@
 #ifndef _ARCH_X86_ARCH_THREAD_H_
 # define _ARCH_X86_ARCH_THREAD_H_
 
-struct arch_thread
+struct		arch_thread
 {
 	virt_addr_t sp;
 };
 
-struct context_switch_frame
+struct		context_switch_frame
 {
 	uintptr edi;
 	uintptr esi;
@@ -28,5 +28,7 @@ struct context_switch_frame
 	uintptr eflags;
 	uintptr eip;
 };
+
+extern void 	x86_context_switch(void **old_esp, void *new_esp);
 
 #endif /* _ARCH_X86_ARCH_THREAD_H_ */

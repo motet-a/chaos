@@ -8,6 +8,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 global start:function
+global stack_a
+global stack_b
+global stack_c
 
 extern gdtptr_phys
 extern gdtptr

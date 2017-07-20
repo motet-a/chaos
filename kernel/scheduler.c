@@ -25,7 +25,7 @@ find_next_thread(void)
 	struct thread *t;
 
 	pass = false;
-	t = get_current_thread();
+	t = get_current_thread() + 1;
 	limit = thread_table + MAX_PID;
 look_for_next:
 	while (t < limit)
@@ -66,7 +66,7 @@ thread_reschedule(void)
 
 		/* TODO memory space switch */
 
-		arch_context_switch(new);
+		arch_context_switch(old, new);
 	}
 }
 
@@ -96,4 +96,11 @@ thread_yield(void)
 	/* TODO unlock the process table here */
 
 	pop_interrupts(save);
+}
+
+void
+thread_resume(struct thread *t)
+{
+	assert_neq(t->state, ZOMBIE);
+	t->state = RUNNABLE;
 }

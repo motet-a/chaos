@@ -19,6 +19,7 @@ static void
 thread_main(void)
 {
 	enable_interrupts();
+
 	current_thread->entry();
 
 	/* TODO exit thread */
@@ -38,8 +39,14 @@ arch_init_thread(struct thread *t)
 	frame--;
 	memset(frame, 0, sizeof(*frame));
 	frame->eip = (uintptr)&thread_main;
-	frame->eflags = 0x3002; /* DPL = 3 */
+	frame->eflags = 0x3002;
 	t->arch.sp = frame;
+}
+
+void
+arch_context_switch(struct thread *old, struct thread *new)
+{
+	x86_context_switch(&old->arch.sp, new->arch.sp);
 }
 
 void

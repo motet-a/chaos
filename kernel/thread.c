@@ -19,6 +19,17 @@ static pid_t next_pid = 1;
 struct thread thread_table[MAX_PID];
 struct thread *idle_thread = thread_table;
 
+extern void * stack_a;
+extern void * stack_b;
+extern void * stack_c;
+
+void *stacks[] =
+{
+	&stack_a,
+	&stack_b,
+	&stack_c,
+};
+
 /* String to print thread state */
 static char const *thread_state_str[] =
 {
@@ -78,6 +89,7 @@ thread_create(char const *name, thread_entry_cb entry, size_t stack_size)
 	t->state = SUSPENDED;
 
 	/* TODO set thread stack */
+	t->stack = stacks[pid - 1]; /* Quick hack, will be removed later */
 
 	arch_init_thread(t);
 	return (t);
@@ -93,7 +105,7 @@ idle_thread_routine(void)
 {
 	uintmax i;
 	while (42) {
-		i = 1;
+		i = 0;
 		/*
 		** Horrible way (but still not as much as you) to delay the output.
 		** This is of course here only for debugging purposes,
@@ -102,7 +114,7 @@ idle_thread_routine(void)
 		*/
 		while(i++ < 1000000)
 			printf("");
-		printf("MyPid: %i\n", get_current_thread()->pid);
+		thread_dump();
 		thread_yield();
 	}
 }
@@ -139,7 +151,7 @@ thread_init(void)
 
 	t = idle_thread;
 
-	memset(t, 0, sizeof(*t));
+	memset(thread_table, 0, sizeof(thread_table));
 	thread_set_name(t, "boot");
 	t->state = RUNNING;
 	set_current_thread(t);
@@ -150,6 +162,12 @@ thread_dump(void)
 {
 	struct thread *t;
 
-	t = get_current_thread();
-	printf("Current thread: [%s] [%s]\n", t->name, thread_state_str[t->state]);
+	t = thread_table;
+	while (t < thread_table + MAX_PID)
+	{
+		if (t->state != NONE) {
+			printf("%i:[%s] - [%s]\n", t->pid, t->name, thread_state_str[t->state]);
+		}
+		t++;
+	}
 }
