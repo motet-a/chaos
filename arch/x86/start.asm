@@ -106,3 +106,15 @@ align 4096
 kernel_stack_bottom:
 	resb 4096 * 16			; Byte reserved for kernel stack (at boot-time)
 kernel_stack_top:
+
+stack_a:
+	resb 4096 * 16
+stack_a_top:
+
+stack_b:
+	resb 4096 * 16
+stack_b_top:
+
+stack_c:
+	resb 4096 * 16
+stack_c_top:
