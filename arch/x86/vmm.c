@@ -113,8 +113,8 @@ arch_vmm_init(void)
 ** Print the virtual memory state.
 ** Only used for debugging.
 */
-__unused static void
-print_mem_state(void)
+__unused void
+x86_print_mem_state(void)
 {
 	uint i;
 	uint j;
@@ -209,5 +209,13 @@ vmm_test(void)
 	assert(is_allocated((virt_addr_t)0xDEADA000));
 	assert(is_allocated((virt_addr_t)0xDEADB000));
 	assert(is_allocated((virt_addr_t)0xDEADC000));
+	assert(!is_allocated((virt_addr_t)0xDEADD000));
+
+	/* Sized munmap */
+	munmap((virt_addr_t)0xDEADA000, 3 * PAGE_SIZE);
+	assert(!is_allocated((virt_addr_t)0xDEAD9000));
+	assert(!is_allocated((virt_addr_t)0xDEADA000));
+	assert(!is_allocated((virt_addr_t)0xDEADB000));
+	assert(!is_allocated((virt_addr_t)0xDEADC000));
 	assert(!is_allocated((virt_addr_t)0xDEADD000));
 }
