@@ -38,7 +38,6 @@ enum			VGA_COLOR
 
 struct			vga
 {
-	struct spinlock	lock;
 	uint16		vga_attrib;
 	uint16		*vgabuff;
 	uint		cursor_x;
