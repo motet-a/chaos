@@ -52,12 +52,28 @@ static char const *thread_state_str[] =
 static pid_t
 find_next_pid()
 {
-	size_t i;
+	bool pass;
+	pid_t pid;
+	pid_t limit;
 
-	i = 0;
-	while (thread_table[i].state != NONE)
-		++i;
-	return (i);
+	pass = false;
+	pid = next_pid;
+	limit = MAX_PID;
+find_pid:
+	while (pid < limit)
+	{
+		if (thread_table[pid].state == NONE)
+			return (pid);
+		++pid;
+	}
+	if (!pass)
+	{
+		pid = 0;
+		limit = next_pid;
+		pass = true;
+		goto find_pid;
+	}
+	return (-1);
 }
 
 /*
