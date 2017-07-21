@@ -100,11 +100,18 @@ thread_yield(void)
 	pop_interrupts(save);
 }
 
+/*
+** Resume the given thread.
+*/
 void
 thread_resume(struct thread *t)
 {
 	assert_neq(t->state, ZOMBIE);
-	t->state = RUNNABLE;
+
+	if (t->state == SUSPENDED) {
+		t->state = RUNNABLE;
+		thread_yield();
+	}
 }
 
 enum handler_return

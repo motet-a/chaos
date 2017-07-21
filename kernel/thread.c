@@ -99,30 +99,6 @@ thread_create(char const *name, thread_entry_cb entry, size_t stack_size)
 }
 
 /*
-** The routine executed when the cpu has nothing to do.
-** This routine can be used to do background stuff, like
-** zero-ing pages.
-*/
-static void
-idle_thread_routine(void)
-{
-	uintmax i;
-
-	while (42) {
-		i = 0;
-		/*
-		** Horrible way (but still not as much as you) to delay the output.
-		** This is of course here only for debugging purposes,
-		** so please stop yelling everywhere. Thanks.
-		** FIXME
-		*/
-		while(i++ < 1000000)
-			printf("");
-		thread_dump();
-	}
-}
-
-/*
 ** Mark the current thread as the idle thread.
 */
 void
@@ -140,7 +116,7 @@ thread_become_idle(void)
 	thread_yield();
 
 	/* Do the idle routine */
-	idle_thread_routine();
+	idle_routine();
 }
 
 /*

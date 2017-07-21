@@ -59,6 +59,7 @@ void			thread_dump(void);
 void			thread_yield(void);
 void			thread_resume(struct thread *);
 enum handler_return	irq_timer_handler(void);
+void			idle_routine(void);
 
 /* Must be implemented in each architecture */
 void			set_current_thread(struct thread *);
