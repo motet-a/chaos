@@ -49,7 +49,6 @@ static void init(void)
 		while(i++ < 1000000)
 			printf("");
 		thread_dump();
-		thread_yield();
 	}
 }
 

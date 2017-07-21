@@ -47,7 +47,7 @@ static char const fr_azerty_charset[128] =
   [49] = 'n',
 };
 
-static void
+static enum handler_return
 keyboard_int_handler(void)
 {
 	char code;
@@ -62,6 +62,7 @@ keyboard_int_handler(void)
 		code = fr_azerty_charset[(uint)code];
 		printf("Keyboard pressed: %c\n", code);
 	}
+	return (IRQ_RESCHEDULE);
 }
 
 static void

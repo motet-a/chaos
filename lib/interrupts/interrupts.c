@@ -104,17 +104,13 @@ unregister_int_handler(uint vec)
 	return (OK);
 }
 
-status_t
+enum handler_return
 handle_interrupt(uint vector)
 {
-	if (vector >= MAX_IRQ) {
-		return (ERR_OUT_OF_RANGE);
-	}
 	if (irq_handlers[vector]) {
-		irq_handlers[vector]();
-		return (OK);
+		return (irq_handlers[vector]());
 	}
-	return (ERR_INVALID_ARGS);
+	return (IRQ_NO_RESCHEDULE);
 }
 
 void

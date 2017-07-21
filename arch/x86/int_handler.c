@@ -7,6 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <kernel/thread.h>
 #include <arch/x86/interrupts.h>
 #include <lib/interrupts.h>
 #include <stdio.h>
@@ -74,10 +75,16 @@ x86_exception_handler(struct regs *regs)
 void
 x86_irq_handler(struct regs * regs)
 {
-	handle_interrupt(regs->int_num);
+	enum handler_return ret;
+
+	ret = handle_interrupt(regs->int_num);
 
 	/* Reset the PICs */
 	if (regs->err_code > 7)
 		RESET_SLAVE_PIC();
 	RESET_MASTER_PIC();
+
+	if (ret == IRQ_RESCHEDULE) {
+		thread_yield();
+	}
 }

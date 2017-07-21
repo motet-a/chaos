@@ -21,7 +21,7 @@
 typedef int			pid_t;
 typedef void			(*thread_entry_cb)(void);
 
-enum thread_state
+enum			thread_state
 {
 	NONE = 0,
 	SUSPENDED,
@@ -30,7 +30,7 @@ enum thread_state
 	ZOMBIE,
 };
 
-struct thread
+struct			thread
 {
 	/* Thread basic infos*/
 	char name[255];
@@ -50,17 +50,18 @@ struct thread
 	/* TODO add memory space of thread */
 };
 
-struct thread	*thread_create(char const *name, thread_entry_cb entry, size_t stack_size);
-void		thread_init(void);
-void		thread_become_idle(void);
-void		thread_dump(void);
-void		thread_yield(void);
-void		thread_resume(struct thread *);
+struct thread		*thread_create(char const *name, thread_entry_cb entry, size_t stack_size);
+void			thread_init(void);
+void			thread_become_idle(void);
+void			thread_dump(void);
+void			thread_yield(void);
+void			thread_resume(struct thread *);
+enum handler_return	irq_timer_handler(void);
 
 /* Must be implemented in each architecture */
-void		set_current_thread(struct thread *);
-struct thread	*get_current_thread(void);
-void		arch_context_switch(struct thread *old, struct thread *new);
-void		arch_init_thread(struct thread *);
+void			set_current_thread(struct thread *);
+struct thread		*get_current_thread(void);
+void			arch_context_switch(struct thread *old, struct thread *new);
+void			arch_init_thread(struct thread *);
 
 #endif /* !_KERNEL_THREAD_H_ */

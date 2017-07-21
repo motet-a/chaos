@@ -115,7 +115,6 @@ idle_thread_routine(void)
 		while(i++ < 1000000)
 			printf("");
 		thread_dump();
-		thread_yield();
 	}
 }
 

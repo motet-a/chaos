@@ -15,7 +15,13 @@
 
 # define MAX_IRQ			16
 
-typedef void (*int_handler)(void);
+enum			handler_return
+{
+	IRQ_NO_RESCHEDULE,
+	IRQ_RESCHEDULE,
+};
+
+typedef enum handler_return (*int_handler)(void);
 
 typedef status_t	(*mask_interrupt_cb)(uint vector);
 typedef status_t	(*unmask_interrupt_cb)(uint vector);
@@ -42,7 +48,7 @@ void			enable_interrupts(void);
 void			disable_interrupts(void);
 status_t		register_int_handler(uint vector, int_handler handler);
 status_t		unregister_int_handler(uint vector);
-status_t		handle_interrupt(uint vector);
+enum handler_return	handle_interrupt(uint vector);
 void			register_interrupt_callbacks(struct interrupts_callbacks *);
 void			push_interrupts(uintptr *save);
 void			pop_interrupts(uintptr save);

@@ -104,3 +104,9 @@ thread_resume(struct thread *t)
 	assert_neq(t->state, ZOMBIE);
 	t->state = RUNNABLE;
 }
+
+enum handler_return
+irq_timer_handler(void)
+{
+	return (IRQ_NO_RESCHEDULE);
+}
