@@ -56,6 +56,23 @@ start:
 	or eax, 0x3
 	mov dword [PHYS(boot_page_directory.last_entry)], eax
 
+	; Map the kernel page table in the page directory.
+	mov eax, PHYS(high_kernel_page_table)
+	or eax, 0x3
+	mov dword [PHYS(boot_page_directory.kernel_entry)], eax
+
+	mov eax, 0
+	mov edx, 0
+.fill_page:				; Fill the page table containing the high mem kernel
+	mov ecx, edx
+	or ecx, 0x3			; Present + Writtable
+	mov edi, PHYS(high_kernel_page_table)
+	mov [edi + eax * 4], ecx
+	add edx, 4096
+	inc eax
+	cmp eax, 1024
+	jne .fill_page			; Works because jmp are relative
+
 	mov eax, PHYS(boot_page_directory)
 	mov cr3, eax			; Load page directory
 
@@ -64,7 +81,7 @@ start:
 	mov cr4, eax
 
 	mov eax, cr0
-	or eax, 0x80000000		; Enable paging
+	or eax, 0x80000001		; Enable paging
 	mov cr0, eax
 
 	lea eax, [.higher_half]		; Jump into virtual space
@@ -79,6 +96,10 @@ start:
 	mov dword [boot_page_directory.first_entry], 0
 	mov eax, cr3
 	mov cr3, eax			; Reload page directory and update the TLB cache
+
+	mov eax, cr4
+	and eax, ~0x1			; Disable 4MiB pages
+	mov cr4, eax
 
 	add ebx, KERNEL_VIRTUAL_BASE
 	push ebx
@@ -97,10 +118,12 @@ boot_page_directory:
 	dd 0x00000083			; Map the first entry to avoid instant-crash
 	times (KERNEL_PAGE_INDEX - 1) dd 0
 	.kernel_entry:
-	dd 0x00000083			; Kernel resides in high memory
+	dd 0
 	times (1024 - KERNEL_PAGE_INDEX - 2) dd 0
 	.last_entry:			; Used for recurse mapping
 	dd 0
+high_kernel_page_table:
+	times 1024 dd 0
 
 ; Boot Kernel stack
 section .bss

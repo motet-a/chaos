@@ -28,7 +28,7 @@ static void init(void)
 
 	i = 500000;
 	while (42) {
-		while(i++ < 1000000)
+		while(++i < 1000000)
 			assert(are_int_enabled());
 		t = thread_create("dumper", &dumper, DEFAULT_STACK_SIZE);
 		assert_neq(t, NULL);

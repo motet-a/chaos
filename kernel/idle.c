@@ -29,7 +29,7 @@ idle_routine(void)
 		** so please stop yelling everywhere. Thanks.
 		** FIXME
 		*/
-		while(i++ < 1000000)
+		while(++i < 1000000)
 			assert(are_int_enabled());
 		thread_dump();
 	}
