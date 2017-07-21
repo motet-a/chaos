@@ -55,21 +55,24 @@ find_next_pid()
 	bool pass;
 	pid_t pid;
 	pid_t limit;
+	pid_t np;
 
 	pass = false;
-	pid = next_pid;
+	np = next_pid;
+	pid = np;
 	limit = MAX_PID;
 find_pid:
 	while (pid < limit)
 	{
-		if (thread_table[pid].state == NONE)
+		if (thread_table[pid].state == NONE) {
 			return (pid);
+		}
 		++pid;
 	}
 	if (!pass)
 	{
 		pid = 0;
-		limit = next_pid;
+		limit = np;
 		pass = true;
 		goto find_pid;
 	}
