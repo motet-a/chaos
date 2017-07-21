@@ -108,5 +108,5 @@ thread_resume(struct thread *t)
 enum handler_return
 irq_timer_handler(void)
 {
-	return (IRQ_NO_RESCHEDULE);
+	return (IRQ_RESCHEDULE);
 }

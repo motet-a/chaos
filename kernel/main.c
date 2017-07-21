@@ -60,7 +60,7 @@ kernel_main(uintptr mb_addr)
 {
 	struct thread *t;
 
-	/* Create the boot thread */
+	/* Put us in the boot thread */
 	thread_init();
 
 	/* Super super early hooks goes first. */
@@ -77,11 +77,9 @@ kernel_main(uintptr mb_addr)
 	kernel_init_level(CHAOS_INIT_LEVEL_PMM, CHAOS_INIT_LEVEL_VMM - 1);
 	kernel_init_level(CHAOS_INIT_LEVEL_VMM, CHAOS_INIT_LEVEL_ARCH - 1);
 
-	/* It's time to initialize arch and platform */
+	/* It's time to initialize arch, platform and drivers */
 	kernel_init_level(CHAOS_INIT_LEVEL_ARCH, CHAOS_INIT_LEVEL_PLATFORM - 1);
 	kernel_init_level(CHAOS_INIT_LEVEL_PLATFORM, CHAOS_INIT_LEVEL_LATEST);
-
-	/* Drivers hooks would go there */
 
 	t = thread_create("init", &init, DEFAULT_STACK_SIZE);
 	thread_resume(t);

@@ -19,7 +19,6 @@ static void
 thread_main(void)
 {
 	enable_interrupts();
-
 	current_thread->entry();
 
 	/* TODO exit thread */

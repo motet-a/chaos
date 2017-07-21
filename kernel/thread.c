@@ -7,6 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <kernel/init.h>
 #include <kernel/thread.h>
 #include <lib/interrupts.h>
 #include <stdio.h>
@@ -154,19 +155,24 @@ thread_init(void)
 	thread_set_name(t, "boot");
 	t->state = RUNNING;
 	set_current_thread(t);
+	register_int_handler(IRQ_TIMER_VECTOR, &irq_timer_handler);
 }
 
+/*
+** Thread dumper to help debug.
+*/
 void
 thread_dump(void)
 {
 	struct thread *t;
 
 	t = thread_table;
+	printf("\n");
 	while (t < thread_table + MAX_PID)
 	{
 		if (t->state != NONE) {
 			printf("%i:[%s] - [%s]\n", t->pid, t->name, thread_state_str[t->state]);
 		}
-		t++;
+		++t;
 	}
 }

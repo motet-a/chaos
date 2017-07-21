@@ -18,6 +18,8 @@
 # define MAX_PID		(32u)
 # define DEFAULT_STACK_SIZE	(0x1000 * 16u)
 
+# define IRQ_TIMER_VECTOR	(0x0)
+
 typedef int			pid_t;
 typedef void			(*thread_entry_cb)(void);
 
