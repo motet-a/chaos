@@ -10,36 +10,10 @@
 #include <kernel/init.h>
 #include <kernel/thread.h>
 #include <kernel/options.h>
+#include <kernel/multiboot.h>
 #include <lib/interrupts.h>
-#include <multiboot2.h>
 #include <stdio.h>
 #include <string.h>
-
-/*
-** Goes through the multiboot structure, printing and evaluating it's content.
-**
-** TODO: Put this in a multiboot.c compilation  unit.
-*/
-static void
-multiboot_load(uintptr mb_addr)
-{
-	struct multiboot_tag *tag;
-
-	printf("Multiboot\n");
-	tag = (struct multiboot_tag *)(mb_addr + 8);
-	while (tag->type != MULTIBOOT_TAG_TYPE_END)
-	{
-		switch (tag->type)
-		{
-		case MULTIBOOT_TAG_TYPE_CMDLINE:
-			printf("\tArguments: [%s]\n", ((struct multiboot_tag_string *)tag)->string);
-			options_parse_command_line(((struct multiboot_tag_string *)tag)->string);
-			break;
-		}
-		tag = (struct multiboot_tag *)((uchar *)tag + ((tag->size + 7) & ~7));
-	}
-	printf("\n");
-}
 
 static void dumper(void)
 {
