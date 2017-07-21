@@ -24,12 +24,14 @@ static void dumper(void)
 static void init(void)
 {
 	size_t i;
+	struct thread *t;
 
 	i = 500000;
 	while (42) {
 		while(i++ < 1000000)
 			assert(are_int_enabled());
-		struct thread *t = thread_create("dumper", &dumper, DEFAULT_STACK_SIZE);
+		t = thread_create("dumper", &dumper, DEFAULT_STACK_SIZE);
+		assert_neq(t, NULL);
 		thread_resume(t);
 		i = 0;
 	}

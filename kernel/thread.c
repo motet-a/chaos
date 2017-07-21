@@ -55,12 +55,11 @@ find_next_pid()
 	bool pass;
 	pid_t pid;
 	pid_t limit;
-	pid_t np;
 
 	pass = false;
-	np = next_pid;
-	pid = np;
+	pid = next_pid;
 	limit = MAX_PID;
+	assert(holding_lock(&thread_table_lock));
 find_pid:
 	while (pid < limit)
 	{
@@ -72,7 +71,7 @@ find_pid:
 	if (!pass)
 	{
 		pid = 0;
-		limit = np;
+		limit = next_pid;
 		pass = true;
 		goto find_pid;
 	}
@@ -102,6 +101,8 @@ thread_create(char const *name, thread_entry_cb entry, size_t stack_size)
 	struct thread *t;
 	pid_t pid;
 
+	acquire_lock(&thread_table_lock);
+
 	pid = find_next_pid();
 	if (unlikely(pid == -1)) {
 		return (NULL);
@@ -119,6 +120,7 @@ thread_create(char const *name, thread_entry_cb entry, size_t stack_size)
 	t->stack = stacks[pid - 1]; /* Quick hack, will be removed later */
 
 	arch_init_thread(t);
+	release_lock(&thread_table_lock);
 	return (t);
 }
 
@@ -137,6 +139,7 @@ thread_exit(void)
 	acquire_lock(&thread_table_lock);
 
 	t->state = NONE; /* TODO change this in ZOMBIE */
+	next_pid = t->pid;
 	thread_reschedule();
 
 	panic("Reached end of thread_exit()"); /* We shoudln't reach this portion of code. */
@@ -151,7 +154,9 @@ thread_resume(struct thread *t)
 	assert_neq(t->state, ZOMBIE);
 
 	if (t->state == SUSPENDED) {
+		acquire_lock(&thread_table_lock);
 		t->state = RUNNABLE;
+		release_lock(&thread_table_lock);
 		thread_yield();
 	}
 }
@@ -164,11 +169,15 @@ thread_become_idle(void)
 {
 	assert(!are_int_enabled());
 
+	acquire_lock(&thread_table_lock);
+
 	/* Set the thread name to 'idle' */
 	thread_set_name(get_current_thread(), "idle");
 
 	/* Enable interrupts */
 	enable_interrupts();
+
+	release_lock(&thread_table_lock);
 
 	/* Yield the cpu to an other thread */
 	thread_yield();
@@ -187,7 +196,6 @@ thread_init(void)
 	struct thread *t;
 
 	t = idle_thread;
-
 	memset(thread_table, 0, sizeof(thread_table));
 	thread_set_name(t, "boot");
 	t->state = RUNNING;
