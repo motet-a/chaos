@@ -50,7 +50,7 @@ look_for_next:
 /*
 ** Finds and executes the next runnable thread.
 */
-static void
+void
 thread_reschedule(void)
 {
 	struct thread *new;
@@ -98,20 +98,6 @@ thread_yield(void)
 	release_lock(&thread_table_lock);
 
 	pop_interrupts(save);
-}
-
-/*
-** Resume the given thread.
-*/
-void
-thread_resume(struct thread *t)
-{
-	assert_neq(t->state, ZOMBIE);
-
-	if (t->state == SUSPENDED) {
-		t->state = RUNNABLE;
-		thread_yield();
-	}
 }
 
 enum handler_return

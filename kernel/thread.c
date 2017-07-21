@@ -47,12 +47,17 @@ static char const *thread_state_str[] =
 ** Look for the next available pid.
 ** Returns -1 if no pid are available.
 **
-** TODO This function is unsafe and uncomplete right now.
+** TODO This function is unsafe and incomplete right now.
 */
 static pid_t
 find_next_pid()
 {
-	return (next_pid++);
+	size_t i;
+
+	i = 0;
+	while (thread_table[i].state != NONE)
+		++i;
+	return (i);
 }
 
 /*
@@ -96,6 +101,40 @@ thread_create(char const *name, thread_entry_cb entry, size_t stack_size)
 
 	arch_init_thread(t);
 	return (t);
+}
+
+/*
+** Exit the current thread.
+*/
+void
+thread_exit(void)
+{
+	struct thread *t;
+
+	t = get_current_thread();
+	assert_eq(t->state, RUNNING);
+
+	disable_interrupts();
+	acquire_lock(&thread_table_lock);
+
+	t->state = NONE; /* TODO change this in ZOMBIE */
+	thread_reschedule();
+
+	panic("Reached end of thread_exit()"); /* We shoudln't reach this portion of code. */
+}
+
+/*
+** Resume the given thread.
+*/
+void
+thread_resume(struct thread *t)
+{
+	assert_neq(t->state, ZOMBIE);
+
+	if (t->state == SUSPENDED) {
+		t->state = RUNNABLE;
+		thread_yield();
+	}
 }
 
 /*

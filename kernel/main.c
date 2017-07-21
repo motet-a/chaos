@@ -10,6 +10,7 @@
 #include <kernel/init.h>
 #include <kernel/thread.h>
 #include <kernel/options.h>
+#include <lib/interrupts.h>
 #include <multiboot2.h>
 #include <stdio.h>
 #include <string.h>
@@ -40,6 +41,12 @@ multiboot_load(uintptr mb_addr)
 	printf("\n");
 }
 
+static void dumper(void)
+{
+	assert(are_int_enabled());
+	thread_dump();
+}
+
 static void init(void)
 {
 	size_t i;
@@ -47,8 +54,9 @@ static void init(void)
 	i = 500000;
 	while (42) {
 		while(i++ < 1000000)
-			printf("");
-		thread_dump();
+			assert(are_int_enabled());
+		struct thread *t = thread_create("dumper", &dumper, DEFAULT_STACK_SIZE);
+		thread_resume(t);
 		i = 0;
 	}
 }

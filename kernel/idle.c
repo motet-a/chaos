@@ -8,6 +8,7 @@
 \* ------------------------------------------------------------------------ */
 
 #include <kernel/thread.h>
+#include <lib/interrupts.h>
 #include <stdio.h>
 
 /*
@@ -29,7 +30,7 @@ idle_routine(void)
 		** FIXME
 		*/
 		while(i++ < 1000000)
-			printf("");
+			assert(are_int_enabled());
 		thread_dump();
 	}
 }

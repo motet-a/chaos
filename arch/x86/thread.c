@@ -28,7 +28,7 @@ thread_main(void)
 
 	/* TODO exit thread */
 	printf("Thread %i: %s exited.\n", current_thread->pid, current_thread->name);
-	while (42);
+	thread_exit();
 }
 
 void

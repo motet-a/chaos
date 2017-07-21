@@ -57,7 +57,9 @@ void			thread_init(void);
 void			thread_become_idle(void);
 void			thread_dump(void);
 void			thread_yield(void);
+void			thread_reschedule(void);
 void			thread_resume(struct thread *);
+void			thread_exit(void);
 enum handler_return	irq_timer_handler(void);
 void			idle_routine(void);
 
