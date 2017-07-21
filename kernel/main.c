@@ -44,11 +44,12 @@ static void init(void)
 {
 	size_t i;
 
+	i = 500000;
 	while (42) {
-		i = 0;
 		while(i++ < 1000000)
 			printf("");
 		thread_dump();
+		i = 0;
 	}
 }
 

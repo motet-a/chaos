@@ -105,6 +105,7 @@ static void
 idle_thread_routine(void)
 {
 	uintmax i;
+
 	while (42) {
 		i = 0;
 		/*
