@@ -7,6 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <kernel/spinlock.h>
 #include <kernel/init.h>
 #include <kernel/thread.h>
 #include <lib/interrupts.h>
@@ -19,6 +20,7 @@ static pid_t next_pid = 1;
 /* Thread table */
 struct thread thread_table[MAX_PID];
 struct thread *idle_thread = thread_table;
+struct spinlock thread_table_lock;
 
 extern void * stack_a;
 extern void * stack_b;

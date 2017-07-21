@@ -7,12 +7,14 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <kernel/spinlock.h>
 #include <kernel/thread.h>
 #include <lib/interrupts.h>
 #include <debug.h>
 
 extern struct thread thread_table[MAX_PID];
 extern struct thread *idle_thread;
+extern struct spinlock thread_table_lock;
 
 /*
 ** Looks for the next runnable thread.
@@ -55,7 +57,7 @@ thread_reschedule(void)
 	struct thread *old;
 
 	assert(!are_int_enabled());
-	/* TODO assert that we hold the process table here */
+	assert(holding_lock(&thread_table_lock));
 
 	old = get_current_thread();
 	new = find_next_thread();
@@ -88,12 +90,12 @@ thread_yield(void)
 	push_interrupts(&save);
 	disable_interrupts();
 
-	/* TODO lock the process table here */
+	acquire_lock(&thread_table_lock);
 
 	t->state = RUNNABLE;
 	thread_reschedule();
 
-	/* TODO unlock the process table here */
+	release_lock(&thread_table_lock);
 
 	pop_interrupts(save);
 }

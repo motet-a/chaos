@@ -7,6 +7,7 @@
 **
 \* ------------------------------------------------------------------------ */
 
+#include <kernel/spinlock.h>
 #include <kernel/thread.h>
 #include <arch/thread.h>
 #include <lib/interrupts.h>
@@ -14,11 +15,15 @@
 #include <stdio.h>
 
 static struct thread *current_thread = NULL;
+extern struct spinlock thread_table_lock;
 
 static void
 thread_main(void)
 {
+	/* Release locks acquired in the yield() that brought us here. */
+	release_lock(&thread_table_lock);
 	enable_interrupts();
+
 	current_thread->entry();
 
 	/* TODO exit thread */
