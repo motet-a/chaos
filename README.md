@@ -2,7 +2,7 @@
 
 ChaOS is a fun project that i'm doing to entertain myself during 2017's summer vacations.
 
-It's a unix-like featureless kernel, that only supports x86 (Intel 32 bits). My goal is to have a basic shell that can handle simple commands like `ls`, `cat` and `echo`.
+It's a unix-like featureless kernel, that only supports x86 (Intel 32 bits). My goal is to end-up having a basic shell that can handle simple userland commands like `ls`, `cat` and `echo`.
 
 # Build Dependencies
 * `nasm`
@@ -30,12 +30,12 @@ To build the kernel, run
 make kernel
 ```
 
-To build a complete iso with grub installed (suitable for USB flash drives), run
+To build a complete iso with grub installed (suitable for USB flash drives or virtual machines), run
 ```bash
 make iso
 ```
 
-# Testing with QEMU
+# Running with QEMU
 
 If you want to run ChaOS through QEMU even if it's boring & useless right now, run
 ```bash
