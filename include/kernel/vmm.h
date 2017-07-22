@@ -10,11 +10,26 @@
 #ifndef _KERNEL_VMM_H_
 # define _KERNEL_VMM_H_
 
+# include <kernel/pmm.h>
+# include <arch/vaspace.h>
 # include <chaosdef.h>
 # include <chaoserr.h>
-# include <kernel/pmm.h>
 
 typedef void 		*virt_addr_t;
+
+/*
+** Represents the virtual address space of a process.
+*/
+struct vaspace
+{
+	uintptr data_start;
+	size_t data_size;
+
+	uintptr stack_start;
+	size_t stack_size;
+
+	struct arch_vaspace arch;
+};
 
 status_t		map_virt_to_phys();
 status_t		map_page(virt_addr_t va);

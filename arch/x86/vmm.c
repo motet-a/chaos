@@ -104,8 +104,7 @@ munmap(virt_addr_t va, size_t size)
 
 void
 arch_vmm_init(void)
-{
-}
+{}
 
 /* Unit tests functions */
 

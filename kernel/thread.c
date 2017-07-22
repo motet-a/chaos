@@ -115,6 +115,7 @@ thread_create(char const *name, thread_entry_cb entry, size_t stack_size)
 	t->stack_size = stack_size;
 	t->entry = entry;
 	t->state = SUSPENDED;
+	t->vaspace = get_current_thread()->vaspace;
 
 	/* TODO set thread stack */
 	t->stack = stacks[pid - 1]; /* Quick hack, will be removed later */

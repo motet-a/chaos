@@ -43,7 +43,7 @@ arch_init_thread(struct thread *t)
 	frame--;
 	memset(frame, 0, sizeof(*frame));
 	frame->eip = (uintptr)&thread_main;
-	frame->eflags = 0x3002;
+	frame->eflags = 0x2;
 	t->arch.sp = frame;
 }
 

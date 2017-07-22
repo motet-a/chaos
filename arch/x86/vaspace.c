@@ -7,17 +7,5 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _ARCH_X86_ARCH_COMMON_OP_H_
-# define _ARCH_X86_ARCH_COMMON_OP_H_
+#include <arch/vaspace.h>
 
-static inline uint
-atomic_exchange(volatile uint *addr, uint newval)
-{
-	asm volatile("xchgl %[newval], %[addr];"
-			: [newval]"=a" (newval)
-			: "a" (newval), [addr]"m" (*addr)
-			: "memory");
-	return newval;
-}
-
-#endif /* !_ARCH_X86_ARCH_COMMON_OP_H_ */

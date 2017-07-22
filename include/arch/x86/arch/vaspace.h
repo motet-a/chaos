@@ -7,17 +7,14 @@
 **
 \* ------------------------------------------------------------------------ */
 
-#ifndef _ARCH_X86_ARCH_COMMON_OP_H_
-# define _ARCH_X86_ARCH_COMMON_OP_H_
+#ifndef _ARCH_X86_ARCH_VASPACE_H_
+# define _ARCH_X86_ARCH_VASPACE_H_
 
-static inline uint
-atomic_exchange(volatile uint *addr, uint newval)
+# include <kernel/pmm.h>
+
+struct arch_vaspace
 {
-	asm volatile("xchgl %[newval], %[addr];"
-			: [newval]"=a" (newval)
-			: "a" (newval), [addr]"m" (*addr)
-			: "memory");
-	return newval;
-}
+	phys_addr_t pagedir;
+};
 
-#endif /* !_ARCH_X86_ARCH_COMMON_OP_H_ */
+#endif /* !_ARCH_X86_ARCH_VASPACE_H_ */

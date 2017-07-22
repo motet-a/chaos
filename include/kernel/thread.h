@@ -49,7 +49,8 @@ struct			thread
 	/* entry point */
 	thread_entry_cb entry;
 
-	/* TODO add memory space of thread */
+	/* virtual address space */
+	struct vaspace *vaspace;
 };
 
 struct thread		*thread_create(char const *name, thread_entry_cb entry, size_t stack_size);
