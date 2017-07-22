@@ -44,4 +44,4 @@ make run
 
 # :rocket: Wanna participate?
 
-Fork with me!
+Fork me!
