@@ -63,7 +63,7 @@ start:
 
 	mov eax, 0
 	mov edx, 0
-.fill_page:				; Fill the page table containing the high mem kernel
+.fill_page:				; Fill the page table containing the high memory kernel
 	mov ecx, edx
 	or ecx, 0x3			; Present + Writtable
 	mov edi, PHYS(high_kernel_page_table)
@@ -71,7 +71,7 @@ start:
 	add edx, 4096
 	inc eax
 	cmp eax, 1024
-	jne .fill_page			; Works because jmp are relative
+	jne .fill_page			; Works because jmp are relative, no need to use PHYS().
 
 	mov eax, PHYS(boot_page_directory)
 	mov cr3, eax			; Load page directory
@@ -117,21 +117,23 @@ boot_page_directory:
 	.first_entry:
 	dd 0x00000083			; Map the first entry to avoid instant-crash
 	times (KERNEL_PAGE_INDEX - 1) dd 0
-	.kernel_entry:
+	.kernel_entry:			; Used at a later point.
 	dd 0
 	times (1024 - KERNEL_PAGE_INDEX - 2) dd 0
 	.last_entry:			; Used for recurse mapping
 	dd 0
+
 high_kernel_page_table:
 	times 1024 dd 0
 
-; Boot Kernel stack
 section .bss
-
 align 4096
+
 kernel_stack_bottom:
 	resb 4096 * 16			; Byte reserved for kernel stack (at boot-time)
 kernel_stack_top:
+
+; Used for debugging purposes, will be removed later
 
 stack_a:
 	resb 4096 * 16
