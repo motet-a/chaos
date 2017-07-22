@@ -100,6 +100,8 @@ __weak void
 arch_vmm_init(void)
 {}
 
+extern struct vaspace default_vaspace;
+
 /*
 ** Initalises the arch-independant stuff of virtual memory management.
 ** Calls the arch-dependent vmm init function.
@@ -107,6 +109,9 @@ arch_vmm_init(void)
 static void
 vmm_init(enum init_level il __unused)
 {
+	default_vaspace.data_start = ALIGN((uintptr)KERNEL_VIRTUAL_END, PAGE_SIZE);
+	default_vaspace.data_pos = default_vaspace.data_start;
+	default_vaspace.data_size = ROUND_DOWN(UINTPTR_MAX - default_vaspace.data_pos, PAGE_SIZE);
 	arch_vmm_init();
 	printf("[OK]\tVirtual Memory Management\n");
 }

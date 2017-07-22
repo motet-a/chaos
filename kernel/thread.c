@@ -22,6 +22,9 @@ struct thread thread_table[MAX_PID];
 struct thread *idle_thread = thread_table;
 struct spinlock thread_table_lock;
 
+/* Default virtual address space for the boot thread */
+struct vaspace default_vaspace;
+
 extern void * stack_a;
 extern void * stack_b;
 extern void * stack_c;
@@ -200,6 +203,7 @@ thread_init(void)
 	memset(thread_table, 0, sizeof(thread_table));
 	thread_set_name(t, "boot");
 	t->state = RUNNING;
+	t->vaspace = &default_vaspace;
 	set_current_thread(t);
 	register_int_handler(IRQ_TIMER_VECTOR, &irq_timer_handler);
 }

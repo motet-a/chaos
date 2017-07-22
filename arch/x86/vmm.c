@@ -102,9 +102,13 @@ munmap(virt_addr_t va, size_t size)
 	}
 }
 
+extern struct vaspace default_vaspace;
+
 void
 arch_vmm_init(void)
-{}
+{
+	default_vaspace.arch.pagedir = get_cr3();
+}
 
 /* Unit tests functions */
 

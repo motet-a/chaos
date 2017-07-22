@@ -23,6 +23,7 @@ typedef void 		*virt_addr_t;
 struct vaspace
 {
 	uintptr data_start;
+	uintptr data_pos;
 	size_t data_size;
 
 	uintptr stack_start;
