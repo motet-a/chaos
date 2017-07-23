@@ -100,6 +100,7 @@ __weak void
 arch_vmm_init(void)
 {}
 
+/* Defined in kernel/thread.C */
 extern struct vaspace default_vaspace;
 
 /*

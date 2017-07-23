@@ -17,20 +17,24 @@
 static struct thread *current_thread = NULL;
 extern struct spinlock thread_table_lock;
 
+/*
+** Very first entry point of each thread. Calls the wanted function.
+*/
 static void
 thread_main(void)
 {
-	/* Release locks acquired in the yield() that brought us here. */
+	/* Release the lock acquired in the yield() that brought us here. */
 	release_lock(&thread_table_lock);
 	enable_interrupts();
 
 	current_thread->entry();
 
-	/* TODO exit thread */
-	printf("Thread %i: %s exited.\n", current_thread->pid, current_thread->name);
 	thread_exit();
 }
 
+/*
+** Initializes the thread system.
+*/
 void
 arch_init_thread(struct thread *t)
 {
@@ -47,18 +51,28 @@ arch_init_thread(struct thread *t)
 	t->arch.sp = frame;
 }
 
+/*
+** Do the arch-dependant part of context switching.
+** Calls an asm routine, defined in context.asm.
+*/
 void
 arch_context_switch(struct thread *old, struct thread *new)
 {
 	x86_context_switch(&old->arch.sp, new->arch.sp);
 }
 
+/*
+** Sets the current thread to the given one.
+*/
 void
 set_current_thread(struct thread *thread)
 {
 	current_thread = thread;
 }
 
+/*
+** Returns the currently running thread.
+*/
 struct thread *
 get_current_thread(void)
 {

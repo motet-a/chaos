@@ -102,6 +102,7 @@ munmap(virt_addr_t va, size_t size)
 	}
 }
 
+/* Defined in kernel/thread.c */
 extern struct vaspace default_vaspace;
 
 void
