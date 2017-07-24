@@ -206,4 +206,4 @@ pmm_test(void)
 }
 
 NEW_INIT_HOOK(pmm, &pmm_init, CHAOS_INIT_LEVEL_PMM);
-NEW_UNIT_TEST(pmm, &pmm_test, UNIT_TEST_LEVEL_MEMORY);
+NEW_UNIT_TEST(pmm, &pmm_test, UNIT_TEST_LEVEL_PMM);

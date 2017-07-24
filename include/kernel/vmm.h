@@ -36,5 +36,7 @@ status_t		map_virt_to_phys();
 status_t		map_page(virt_addr_t va);
 virt_addr_t		mmap(virt_addr_t va, size_t size);
 void			munmap(virt_addr_t va, size_t size);
+status_t		kbrk(virt_addr_t new_brk);
+virt_addr_t		ksbrk(intptr);
 
 #endif /* !_KERNEL_VMM_H_ */

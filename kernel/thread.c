@@ -49,8 +49,6 @@ static char const *thread_state_str[] =
 /*
 ** Look for the next available pid.
 ** Returns -1 if no pid are available.
-**
-** TODO This function is unsafe and incomplete right now.
 */
 static pid_t
 find_next_pid()

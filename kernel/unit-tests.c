@@ -39,5 +39,6 @@ unit_tests(enum init_level il)
 }
 
 NEW_INIT_HOOK(unit_tests_early, &unit_tests, CHAOS_INIT_LEVEL_UTESTS_EARLY);
-NEW_INIT_HOOK(unit_tests_memory, &unit_tests, CHAOS_INIT_LEVEL_UTESTS_MEMORY);
+NEW_INIT_HOOK(unit_tests_pmm, &unit_tests, CHAOS_INIT_LEVEL_UTESTS_PMM);
+NEW_INIT_HOOK(unit_tests_vmm, &unit_tests, CHAOS_INIT_LEVEL_UTESTS_VMM);
 NEW_INIT_HOOK(unit_tests_normal, &unit_tests, CHAOS_INIT_LEVEL_UTESTS);

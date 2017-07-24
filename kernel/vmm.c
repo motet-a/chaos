@@ -20,6 +20,9 @@
 #include <kernel/vmm.h>
 #include <stdio.h>
 
+virt_addr_t kernel_heap_start;
+size_t kernel_heap_size;
+
 /*
 ** Maps a physical address to a virtual one.
 **
@@ -92,6 +95,58 @@ mmap(virt_addr_t va, size_t size)
 }
 
 /*
+** Set the new end of kernel heap.
+** TODO Make this function safer (overflow)
+*/
+status_t
+kbrk(virt_addr_t new_brk)
+{
+	virt_addr_t brk;
+	intptr add;
+	intptr round_add;
+
+	if (new_brk >= kernel_heap_start)
+	{
+		add = new_brk - (kernel_heap_start + kernel_heap_size);
+		new_brk = (virt_addr_t)ROUND_DOWN((uintptr)new_brk, PAGE_SIZE);
+		brk = (virt_addr_t)(ROUND_DOWN((uintptr)(kernel_heap_start + kernel_heap_size), PAGE_SIZE));
+		round_add = new_brk - brk;
+		kernel_heap_size += add;
+		if (round_add > 0)
+		{
+			if (unlikely(mmap(brk + PAGE_SIZE, round_add) == NULL)) {
+				kernel_heap_size -= add;
+				return (ERR_NO_MEMORY);
+			}
+			return (OK);
+		}
+		else if (round_add < 0)
+		{
+			munmap(brk + round_add + PAGE_SIZE, -round_add);
+			return (OK);
+		}
+	}
+	return (ERR_INVALID_ARGS);
+}
+
+virt_addr_t
+ksbrk(intptr inc)
+{
+	kbrk(kernel_heap_start + kernel_heap_size + inc);
+	return (kernel_heap_start + kernel_heap_size);
+}
+
+/*
+** Kernel memory allocator.
+** This is NOT suitable for user-space memory allocation.
+*/
+virt_addr_t
+kmalloc(size_t size)
+{
+	return (NULL);
+}
+
+/*
 ** Initialises the arch-dependent stuff of virtual memory management.
 **
 ** Weak symbol, should be re-implemented for each supported architecture.
@@ -110,10 +165,19 @@ extern struct vaspace default_vaspace;
 static void
 vmm_init(enum init_level il __unused)
 {
-	default_vaspace.data_start = ALIGN((uintptr)KERNEL_VIRTUAL_END, PAGE_SIZE);
-	default_vaspace.data_pos = default_vaspace.data_start;
-	default_vaspace.data_size = ROUND_DOWN(UINTPTR_MAX - default_vaspace.data_pos, PAGE_SIZE);
+	/* Set-up kernel heap */
+	kernel_heap_start = (virt_addr_t)ALIGN((uintptr)KERNEL_VIRTUAL_END, 1024u * PAGE_SIZE);
+	kernel_heap_size = 0;
+
+	/* Set-up default virtual space for boot thread */
+	default_vaspace.data_start = 0;
+	default_vaspace.data_pos = 0;
+	default_vaspace.data_size = 0;
 	arch_vmm_init();
+
+	/* Allocate the first heap page or the kbrk algorithm will not work. */
+	mmap(kernel_heap_start, PAGE_SIZE);
+
 	printf("[OK]\tVirtual Memory Management\n");
 }
 
@@ -122,4 +186,4 @@ vmm_test(void)
 {}
 
 NEW_INIT_HOOK(vmm, &vmm_init, CHAOS_INIT_LEVEL_VMM);
-NEW_UNIT_TEST(vmm, &vmm_test, UNIT_TEST_LEVEL_MEMORY);
+NEW_UNIT_TEST(vmm, &vmm_test, UNIT_TEST_LEVEL_VMM);

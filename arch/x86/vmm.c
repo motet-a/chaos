@@ -35,7 +35,7 @@ map_virt_to_phys(virt_addr_t va, phys_addr_t pa)
 		pde->present = true;
 		pde->rw = true;
 		invlpg(pt);
-		memset(pt, 42, PAGE_SIZE); /* Clean the new page with random shitty values */
+		memset(pt, 0, PAGE_SIZE);
 		allocated_pde = true;
 	}
 	pte = pt->entries + GET_PT_IDX(va);
@@ -180,9 +180,14 @@ is_allocated(virt_addr_t va)
 	return (pde->present && pte->present);
 }
 
+extern virt_addr_t kernel_heap_start;
+extern size_t kernel_heap_size;
+
 void
 vmm_test(void)
 {
+	virt_addr_t brk;
+
 	assert(!is_allocated((virt_addr_t)0xDEADB000));
 	assert_eq(map_page((virt_addr_t)0xDEADB000), OK);
 	assert(is_allocated((virt_addr_t)0xDEADB000));
@@ -222,4 +227,59 @@ vmm_test(void)
 	assert(!is_allocated((virt_addr_t)0xDEADB000));
 	assert(!is_allocated((virt_addr_t)0xDEADC000));
 	assert(!is_allocated((virt_addr_t)0xDEADD000));
+
+	/* tiny ksbrk tests */
+	brk = ksbrk(0);
+	assert(is_allocated(brk));
+	assert_eq(brk, kernel_heap_start);
+	assert_eq(kernel_heap_size, 0);
+	ksbrk(0);
+	assert(is_allocated(brk));
+	assert_eq(kernel_heap_size, 0);
+	assert_eq(ksbrk(-1), brk);
+	assert_eq(ksbrk(0), brk);
+	ksbrk(1);
+	assert(is_allocated(brk));
+	assert_eq(ksbrk(0), brk + 1);
+	assert_eq(kernel_heap_size, 1);
+	ksbrk(-1);
+	assert(is_allocated(brk));
+	assert_eq(kernel_heap_size, 0);
+	assert_eq(ksbrk(0), brk);
+
+	/* medium ksbrk tests */
+	assert_eq(ksbrk(PAGE_SIZE), brk + PAGE_SIZE);
+	assert_eq(kernel_heap_size, PAGE_SIZE);
+	assert(is_allocated(brk));
+	assert(is_allocated(brk + PAGE_SIZE));
+	assert(is_allocated(ksbrk(0)));
+	assert_eq(ksbrk(-PAGE_SIZE), brk);
+	assert_eq(kernel_heap_size, 0);
+	assert(is_allocated(brk));
+	assert(!is_allocated(brk + PAGE_SIZE));
+	assert(is_allocated(ksbrk(0)));
+	assert_eq(ksbrk(0), brk);
+
+	/* huge ksbrk tests */
+	assert_eq(ksbrk(10 * PAGE_SIZE), brk + 10 * PAGE_SIZE);
+	assert(is_allocated(brk));
+	assert(is_allocated(brk + 5 * PAGE_SIZE));
+	assert(is_allocated(brk + 10 * PAGE_SIZE));
+	assert(!is_allocated(brk + 11 * PAGE_SIZE));
+	assert_eq(ksbrk(0), brk + 10 * PAGE_SIZE);
+	assert_eq(ksbrk(-5 * PAGE_SIZE), brk + 5 * PAGE_SIZE);
+	assert_eq(ksbrk(0), brk + 5 * PAGE_SIZE);
+	assert_eq(kernel_heap_size, 5 * PAGE_SIZE);
+	assert(is_allocated(brk + 5 * PAGE_SIZE));
+	assert(!is_allocated(brk + 6 * PAGE_SIZE));
+	assert_eq(ksbrk(-5 * PAGE_SIZE), brk);
+	assert_eq(ksbrk(0), brk);
+	assert_eq(kernel_heap_size, 0);
+	assert(!is_allocated(brk + 5 * PAGE_SIZE));
+	assert(is_allocated(brk));
+
+	/* tricky kbrk tests */
+	assert_eq(kbrk(NULL), ERR_INVALID_ARGS);
+	assert_eq(ksbrk(0), brk);
 }
+
